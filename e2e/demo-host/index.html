@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo guesthouse website</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 40px 24px;
+        background: #f6f3ee;
+        color: #222;
+      }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-break: break-all;
+        background: #fff;
+        padding: 12px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Demo guesthouse website</h1>
+      <p>
+        This static page simulates a property's own website. The chat launcher in the corner is the
+        StayTalk widget, embedded with a single script tag.
+      </p>
+      <pre id="snippet"></pre>
+    </main>
+    <!-- StayTalk widget -->
+    <script src="__APP_ORIGIN__/widget/v1.js" data-key="__WIDGET_KEY__" async></script>
+    <script>
+      document.getElementById("snippet").textContent =
+        document.querySelector("script[data-key]").outerHTML;
+    </script>
+  </body>
+</html>

@@ -52,6 +52,16 @@ pnpm test        # Postgres 실행 필요 (staytalk_test DB 사용)
 pnpm test:e2e    # Playwright. 처음이면: pnpm exec playwright install chromium
 ```
 
+## 웹 위젯 데모
+
+```bash
+pnpm dev          # 앱 (위젯 loader도 함께 빌드)
+pnpm demo:host    # 숙소 홈페이지 역할의 정적 페이지 → http://localhost:4173
+```
+
+데모 페이지 오른쪽 아래 버튼으로 게스트처럼 대화한 뒤, 대시보드 **인박스**에서 확인·답장할 수 있습니다.
+위젯 설치 코드와 허용 도메인은 대시보드 **설정**에서 관리합니다.
+
 ## AI 평가 (evals)
 
 ```bash

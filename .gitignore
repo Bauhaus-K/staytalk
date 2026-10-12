@@ -52,3 +52,6 @@ next-env.d.ts
 
 # evals
 /evals/reports/
+
+# built widget loader (pnpm widget:build)
+/public/widget/

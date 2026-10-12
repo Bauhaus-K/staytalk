@@ -27,18 +27,35 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
-    // Separate dist dir + port so it can run alongside `pnpm dev`; always
-    // mock AI and the isolated test database.
-    command: `pnpm exec next dev --port ${PORT}`,
-    url: `${baseURL}/ko/login`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-    env: {
-      NEXT_DIST_DIR: ".next-e2e",
-      DATABASE_URL: process.env.DATABASE_URL_TEST ?? "",
-      AI_MODE: "mock",
-      LINE_MODE: "mock",
+  webServer: [
+    {
+      // Separate dist dir + port so it can run alongside the dev server; always
+      // mock AI and the isolated test database.
+      command: `pnpm exec next dev --port ${PORT}`,
+      url: `${baseURL}/ko/login`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+      env: {
+        NEXT_DIST_DIR: ".next-e2e",
+        DATABASE_URL: process.env.DATABASE_URL_TEST ?? "",
+        APP_URL: baseURL,
+        AI_MODE: "mock",
+        LINE_MODE: "mock",
+      },
     },
-  },
+    {
+      // Stand-in for a property's website (whitelisted origin in the seed).
+      command: "node scripts/demo-host.mjs",
+      url: "http://localhost:4173/",
+      reuseExistingServer: !process.env.CI,
+      env: { PORT: "4173", APP_ORIGIN: baseURL },
+    },
+    {
+      // A site that is NOT whitelisted.
+      command: "node scripts/demo-host.mjs",
+      url: "http://localhost:4174/",
+      reuseExistingServer: !process.env.CI,
+      env: { PORT: "4174", APP_ORIGIN: baseURL },
+    },
+  ],
 });

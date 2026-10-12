@@ -2,6 +2,10 @@ import { randomBytes } from "node:crypto";
 import type { DbClient } from "../../src/server/db/client";
 import { hashPassword } from "../../src/server/auth/password";
 import { forOrg } from "../../src/server/db/tenant";
+import { MockLlmClient } from "../../src/server/agent/llm/mock";
+import { MemoryNotifier } from "../../src/server/notifications";
+import { handleGuestMessage } from "../../src/server/services/conversation";
+import { resolveConversation, sendStaffReply } from "../../src/server/services/staff";
 import { fukuokaRyokan } from "./data/fukuoka";
 import { seoulGuesthouse } from "./data/seoul";
 import type { SeedProperty } from "./data/types";
@@ -93,11 +97,69 @@ async function seedOne(client: DbClient, data: SeedProperty, passwordHash: strin
   return property;
 }
 
-export async function seedDemo(client: DbClient) {
+/** Sample guest conversations so the inbox isn't empty in development. */
+const SAMPLE_CONVERSATIONS: Record<
+  string,
+  { text: string; staffReply?: string; resolve?: boolean }[]
+> = {
+  org_demo_seoul: [
+    { text: "Is there free Wi-Fi in the rooms?" },
+    { text: "サウナはありますか？" },
+    {
+      text: "房间太吵了，晚上睡不着。",
+      staffReply: "불편을 드려 죄송합니다. 바로 확인해 보겠습니다.",
+      resolve: true,
+    },
+    { text: "체크인 몇 시부터 가능해요?" },
+  ],
+  org_demo_fukuoka: [
+    { text: "저녁 식사는 몇 시예요?" },
+    { text: "I have a tattoo. Can I use the public bath?" },
+    {
+      text: "我要求退款，房間跟照片不一樣。",
+      staffReply: "ご不便をおかけし申し訳ございません。担当者よりご連絡いたします。",
+    },
+  ],
+};
+
+async function seedConversations(client: DbClient, organizationId: string, propertyId: string) {
+  const llm = new MockLlmClient();
+  const db = forOrg(organizationId, client);
+  const owner = await db.user.findFirstOrThrow({ where: { role: "OWNER" } });
+  for (const [index, sample] of (SAMPLE_CONVERSATIONS[organizationId] ?? []).entries()) {
+    const result = await handleGuestMessage(
+      {
+        organizationId,
+        propertyId,
+        channel: "WEB_WIDGET",
+        guestSessionId: `seed-${index}`,
+        text: sample.text,
+      },
+      { client, llm, notifier: new MemoryNotifier(), maxToolCalls: 6, timeoutMs: 10_000 },
+    );
+    if (sample.staffReply) {
+      await sendStaffReply(db, llm, {
+        organizationId,
+        conversationId: result.conversationId,
+        userId: owner.id,
+        text: sample.staffReply,
+      });
+    }
+    if (sample.resolve) {
+      await resolveConversation(db, { conversationId: result.conversationId, userId: owner.id });
+    }
+  }
+}
+
+export async function seedDemo(client: DbClient, options: { sampleConversations?: boolean } = {}) {
   const passwordHash = await hashPassword(DEMO_PASSWORD);
   const results = [];
   for (const data of DEMO_PROPERTIES) {
-    results.push(await seedOne(client, data, passwordHash));
+    const property = await seedOne(client, data, passwordHash);
+    if (options.sampleConversations) {
+      await seedConversations(client, data.organization.id, property.id);
+    }
+    results.push(property);
   }
   return results;
 }

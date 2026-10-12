@@ -36,6 +36,7 @@ export async function escalateConversation(
       escalationId: escalation.id,
       reason: input.reason,
       summary: input.summary,
+      question: ctx.guestMessage,
     });
   } catch (error) {
     // A failed notification must not break the guest conversation.

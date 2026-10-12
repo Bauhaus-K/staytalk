@@ -7,7 +7,7 @@ async function main() {
   if (!url) throw new Error("DATABASE_URL is not set");
   const client = createClient(url);
   try {
-    const properties = await seedDemo(client);
+    const properties = await seedDemo(client, { sampleConversations: true });
     console.log(`Seeded ${properties.length} demo properties:`);
     for (const d of DEMO_PROPERTIES) {
       console.log(

@@ -8,6 +8,8 @@ export type EscalationEvent = {
   escalationId: string;
   reason: EscalationReason;
   summary: string;
+  /** Guest message that triggered it (already PII-masked). */
+  question: string | null;
 };
 
 /**

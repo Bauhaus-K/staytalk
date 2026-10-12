@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "pnpm widget:build && next dev",
+    "build": "pnpm widget:build && next build",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -19,7 +19,9 @@
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset --force && prisma db seed",
     "postinstall": "prisma generate",
-    "eval": "tsx evals/run.ts"
+    "eval": "tsx evals/run.ts",
+    "widget:build": "esbuild widget/loader.ts --bundle --minify --format=iife --target=es2018 --outfile=public/widget/v1.js",
+    "demo:host": "node scripts/demo-host.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

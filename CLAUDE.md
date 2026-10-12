@@ -47,8 +47,9 @@ Decisions to remember:
 | `pnpm lint` / `pnpm typecheck` / `pnpm test` | Quality gate (must pass each phase). `test` needs Postgres up                   |
 | `pnpm test:e2e`                              | Playwright; starts its own dev server on :3100 against `staytalk_test`          |
 | `pnpm format`                                | Prettier                                                                        |
-| `pnpm eval` (Phase 1)                        | Agent evals → `evals/reports/`                                                  |
-| `pnpm widget:build` (Phase 2)                | Widget loader bundle → `public/widget/v1.js`                                    |
+| `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`             |
+| `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)         |
+| `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173              |
 
 E2E with a preinstalled Chromium: `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome pnpm test:e2e`.
 
@@ -63,9 +64,9 @@ src/
   auth.ts                       Auth.js config (providers, callbacks, session shape)
   app/[locale]/login/           login (password + magic link)
   app/[locale]/(dashboard)/     inbox, bookings, knowledge, rooms, metrics, playground, settings
-  app/widget/                   (Phase 2) iframe chat UI for guests — own root layout, no dashboard auth
+  app/widget/frame              iframe chat UI for guests — own root layout, no dashboard auth
   app/api/auth/[...nextauth]    Auth.js handlers
-  app/api/widget/*              (Phase 2) public widget API: public key + Origin check + rate limit
+  app/api/widget/v1/*           widget API (session, messages): signed session token, same-origin only, rate limit
   app/api/webhooks/line         (Phase 4)
   app/api/cron/*                (Phase 3+) batch endpoints, bearer CRON_SECRET
   i18n/                         routing, request config, messages/{ko,ja,en}.json
@@ -78,14 +79,17 @@ src/
     agent/                      loop.ts (manual tool loop), system-prompt.ts, emergency.ts,
                                 tools/ (zod-defined, strict), llm/{anthropic,mock}.ts
     language/                   codes, script-based detection, translation, fixed guest strings
-    channels/                   (Phase 2/4) ChannelAdapter: widget, line, kakao(stub)
+    channels/                   ChannelAdapter interface, WebWidgetAdapter, push registry (LINE/Kakao: Phase 4)
+    security/                   widget session token (HMAC), rate limiter, origin/CSP helpers
     services/                   conversation (end-to-end guest message flow), knowledge (trigram+substring
                                 search), escalation, usage, conversation-view, runtime (prod wiring)
-    actions/                    server actions (knowledge CRUD, playground)
-    notifications/              Notifier interface; email impl
+    actions/                    server actions (knowledge CRUD, playground, inbox, settings)
+    notifications/              Notifier interface; EmailNotifier (per-recipient locale)
     privacy/                    PII detection + masking
     jobs/                       expire-bookings, mask-conversations
   generated/prisma/             generated client (gitignored)
+widget/loader.ts                embeddable loader source (esbuild → public/widget/v1.js, gitignored)
+scripts/demo-host.mjs           static demo "property website" (also used by E2E on :4173/:4174)
 prisma/                         schema.prisma, migrations/, seed/ (seed.ts reusable from tests)
 test/                           Vitest global setup (migrates staytalk_test), DB helpers, integration tests
 e2e/                            Playwright specs
@@ -130,6 +134,19 @@ evals/                          cases/*.json (schema.ts), run.ts, reports/ (giti
 - Schema changes: edit `prisma/schema.prisma` → `pnpm db:migrate --name <change>`; raw SQL
   (extensions, special indexes) goes into the migration and must also be declared in the schema
   when Prisma can express it, so `prisma migrate diff` stays empty.
+
+## Widget & inbox notes
+
+- Embed: `<script src="APP/widget/v1.js" data-key="pk_…" async>`. The loader injects a launcher
+  and an iframe of `/widget/frame?key=…&lang=…` (served by us).
+- Site whitelist = CSP `frame-ancestors` set by `src/proxy.ts` from `Property.allowedOrigins`.
+  The widget API is same-origin only (Origin header, or `Sec-Fetch-Site: same-origin` for GETs,
+  which carry no Origin). No CORS.
+- Session token: HMAC (AUTH_SECRET) over {org, property, guest session id}, 30 days, kept in the
+  frame's localStorage. Staff replies reach the guest by polling (4s open / 20s closed).
+- Staff reply: original kept, translated copy for the guest; replying pauses the AI (ESCALATED)
+  until "resolve" or "hand back to AI". Escalation `firstResponseAt` is set on the first reply.
+- Push channels register a sender in `channels/registry.ts`; the widget needs none.
 
 ## Agent implementation notes
 

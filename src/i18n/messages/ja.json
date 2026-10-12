@@ -131,5 +131,64 @@
     "escalation": "エスカレーション",
     "mockNotice": "AI_MODE=mock：ルールベースの模擬AIで動作中です。実際のClaudeの回答ではありません。",
     "sendError": "メッセージを送信できませんでした。"
+  },
+  "email": {
+    "subject": "[StayTalk] {property}: {reason}",
+    "emergencySubject": "[緊急] {property}: ゲストの緊急事態",
+    "intro": "{property}のゲストとの会話が担当者に引き継がれました。",
+    "reason": "理由",
+    "summary": "概要",
+    "question": "ゲストのメッセージ",
+    "open": "会話を開く",
+    "footer": "このメールはStayTalkから自動送信されています。"
+  },
+  "inbox": {
+    "title": "受信箱",
+    "description": "ゲストとの会話を確認し、必要に応じて直接返信できます。返信はゲストの言語に自動翻訳されます。",
+    "all": "すべて",
+    "showTest": "テスト会話を含める",
+    "empty": "会話がありません。",
+    "noMessages": "（メッセージなし）",
+    "open": "開く",
+    "back": "受信箱へ",
+    "channel": {
+      "WEB_WIDGET": "Webウィジェット",
+      "LINE": "LINE",
+      "KAKAO": "カカオ",
+      "EMAIL": "メール"
+    },
+    "guestLanguage": "ゲストの言語",
+    "escalations": "エスカレーション",
+    "escalationOpen": "対応待ち",
+    "escalationResolved": "対応済み",
+    "summary": "概要",
+    "question": "ゲストの質問",
+    "reply": "直接返信",
+    "replyHint": "{language}で入力すると、ゲストの言語に翻訳して送信します。原文も保存されます。",
+    "send": "送信",
+    "sending": "送信中…",
+    "resolve": "解決済みにする",
+    "returnToAi": "AIに戻す",
+    "aiPaused": "担当者が対応中のため、AIは返信しません。",
+    "hideTranslation": "翻訳を隠す",
+    "showTranslation": "翻訳を表示",
+    "errors": {
+      "generic": "処理できませんでした。もう一度お試しください。"
+    },
+    "lastActivity": "最終更新",
+    "property": "施設"
+  },
+  "settings": {
+    "title": "設定",
+    "widget": "Webウィジェット",
+    "widgetDescription": "施設サイトの </body> の直前に以下のコードを貼り付けてください。",
+    "publicKey": "公開キー",
+    "allowedOrigins": "許可ドメイン",
+    "allowedOriginsHint": "ウィジェットを表示するサイトのURLを1行に1つ入力してください（例：https://my-ryokan.jp）。一覧にないサイトではウィジェットは開きません。",
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "保存しました。",
+    "invalidOrigin": "無効なURL：{value}",
+    "preview": "プレビューを開く"
   }
 }

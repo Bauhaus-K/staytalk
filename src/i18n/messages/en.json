@@ -131,5 +131,64 @@
     "escalation": "Escalation",
     "mockNotice": "AI_MODE=mock: running a rule-based mock AI, not real Claude responses.",
     "sendError": "Could not send the message."
+  },
+  "email": {
+    "subject": "[StayTalk] {property}: {reason}",
+    "emergencySubject": "[URGENT] {property}: guest emergency",
+    "intro": "A guest conversation at {property} was handed over to staff.",
+    "reason": "Reason",
+    "summary": "Summary",
+    "question": "Guest message",
+    "open": "Open conversation",
+    "footer": "This email was sent automatically by StayTalk."
+  },
+  "inbox": {
+    "title": "Inbox",
+    "description": "Review guest conversations and reply directly when needed. Replies are translated into the guest's language.",
+    "all": "All",
+    "showTest": "Include test conversations",
+    "empty": "No conversations.",
+    "noMessages": "(no messages)",
+    "open": "Open",
+    "back": "Back to inbox",
+    "channel": {
+      "WEB_WIDGET": "Web widget",
+      "LINE": "LINE",
+      "KAKAO": "Kakao",
+      "EMAIL": "Email"
+    },
+    "guestLanguage": "Guest language",
+    "escalations": "Escalations",
+    "escalationOpen": "Open",
+    "escalationResolved": "Resolved",
+    "summary": "Summary",
+    "question": "Guest question",
+    "reply": "Reply directly",
+    "replyHint": "Write in {language}; it is translated into the guest's language. The original is kept.",
+    "send": "Send",
+    "sending": "Sending…",
+    "resolve": "Mark resolved",
+    "returnToAi": "Hand back to AI",
+    "aiPaused": "Staff is handling this conversation; the AI will not reply.",
+    "hideTranslation": "Hide translation",
+    "showTranslation": "Show translation",
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    },
+    "lastActivity": "Last activity",
+    "property": "Property"
+  },
+  "settings": {
+    "title": "Settings",
+    "widget": "Web widget",
+    "widgetDescription": "Paste this code right before </body> on your property's website.",
+    "publicKey": "Public key",
+    "allowedOrigins": "Allowed sites",
+    "allowedOriginsHint": "One site URL per line (e.g. https://my-guesthouse.com). The widget won't open on sites not listed here.",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "invalidOrigin": "Invalid URL: {value}",
+    "preview": "Open preview"
   }
 }
