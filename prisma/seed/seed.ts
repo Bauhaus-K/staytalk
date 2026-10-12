@@ -6,6 +6,7 @@ import { MockLlmClient } from "../../src/server/agent/llm/mock";
 import { MemoryNotifier } from "../../src/server/notifications";
 import { handleGuestMessage } from "../../src/server/services/conversation";
 import { resolveConversation, sendStaffReply } from "../../src/server/services/staff";
+import { createBookingRequest } from "../../src/server/services/booking";
 import { fukuokaRyokan } from "./data/fukuoka";
 import { seoulGuesthouse } from "./data/seoul";
 import type { SeedProperty } from "./data/types";
@@ -149,6 +150,25 @@ async function seedConversations(client: DbClient, organizationId: string, prope
       await resolveConversation(db, { conversationId: result.conversationId, userId: owner.id });
     }
   }
+
+  // One pending booking request per property for the bookings screen.
+  const roomType = await db.roomType.findFirstOrThrow({
+    where: { propertyId, capacity: { gte: 2 } },
+  });
+  const checkIn = utcDate(21);
+  await createBookingRequest(db, new MemoryNotifier(), {
+    organizationId,
+    propertyId,
+    conversationId: null,
+    roomTypeId: roomType.id,
+    checkIn: checkIn.toISOString().slice(0, 10),
+    checkOut: utcDate(23).toISOString().slice(0, 10),
+    guests: 2,
+    guestName: "Sample Guest",
+    guestContact: "sample.guest@example.com",
+    guestLanguage: "en",
+    note: "Late arrival around 21:00",
+  });
 }
 
 export async function seedDemo(client: DbClient, options: { sampleConversations?: boolean } = {}) {

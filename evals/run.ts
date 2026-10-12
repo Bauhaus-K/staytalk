@@ -26,7 +26,7 @@ import { DEMO_PROPERTIES, seedDemo } from "../prisma/seed/seed";
 import { evalFileSchema, type EvalCase } from "./schema";
 
 /** Highest phase whose agent tools are implemented. */
-const CURRENT_PHASE = 1;
+const CURRENT_PHASE = 3;
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 

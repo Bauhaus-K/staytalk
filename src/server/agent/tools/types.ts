@@ -11,11 +11,13 @@ export type PropertyContext = {
   country: "KR" | "JP";
   defaultLanguage: string;
   staffLanguage: string;
+  timezone: string;
 };
 
 /** Mutable per-run state tools can update (read by the conversation service). */
 export type RunState = {
   escalation?: { id: string; reason: EscalationReason };
+  bookingRequestIds?: string[];
 };
 
 export type ToolContext = {
@@ -29,6 +31,8 @@ export type ToolContext = {
   /** Unscoped client for raw SQL that applies organizationId explicitly. */
   client: DbClient;
   notifier: Notifier;
+  /** Request time (fixed per run; injectable in tests). */
+  now: Date;
   state: RunState;
 };
 
@@ -37,6 +41,8 @@ export type ToolDefinition<S extends z.ZodType = z.ZodType> = {
   description: string;
   schema: S;
   run(input: z.infer<S>, ctx: ToolContext): Promise<unknown>;
+  /** Returns the input as it may be logged (e.g. guest PII removed). */
+  redactInput?(input: unknown): unknown;
 };
 
 export function defineTool<S extends z.ZodType>(def: ToolDefinition<S>): ToolDefinition<S> {

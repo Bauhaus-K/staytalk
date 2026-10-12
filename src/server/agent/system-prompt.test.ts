@@ -69,7 +69,13 @@ describe("extractSources", () => {
 describe("apiTools", () => {
   it("produces strict schemas without unsupported keywords", () => {
     const tools = apiTools();
-    expect(tools.map((t) => t.name)).toEqual(["search_knowledge", "escalate_to_human"]);
+    expect(tools.map((t) => t.name)).toEqual([
+      "search_knowledge",
+      "check_availability",
+      "create_booking_request",
+      "get_booking_request_status",
+      "escalate_to_human",
+    ]);
     for (const tool of tools) {
       expect(tool.strict).toBe(true);
       const json = JSON.stringify(tool.input_schema);

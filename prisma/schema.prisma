@@ -382,7 +382,9 @@ model BookingRequest {
   note           String?       @db.Text
   status         BookingStatus @default(PENDING)
   expiresAt      DateTime
+  // Template code (FULLY_BOOKED | DATES_UNAVAILABLE | GROUP_SIZE | OTHER) + optional staff note.
   declineReason  String?
+  declineNote    String?       @db.Text
   decidedById    String?
   decidedAt      DateTime?
   createdAt      DateTime      @default(now())

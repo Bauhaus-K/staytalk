@@ -1,5 +1,10 @@
 import { z } from "zod";
 import type { AgentTool } from "../llm/types";
+import {
+  checkAvailabilityTool,
+  createBookingRequestTool,
+  getBookingRequestStatusTool,
+} from "./booking";
 import { escalateTool } from "./escalate";
 import { searchKnowledgeTool } from "./search-knowledge";
 import type { ToolDefinition } from "./types";
@@ -7,6 +12,9 @@ import type { ToolDefinition } from "./types";
 /** Tools available to the guest agent, in a fixed order (part of the cached prefix). */
 export const AGENT_TOOLS: ToolDefinition[] = [
   searchKnowledgeTool,
+  checkAvailabilityTool,
+  createBookingRequestTool,
+  getBookingRequestStatusTool,
   escalateTool,
 ] as ToolDefinition[];
 

@@ -1,21 +1,24 @@
 [
   {
-    "id": "seoul-en-new-booking-handoff",
+    "id": "seoul-en-availability-request",
     "property": "seoul",
     "category": "booking",
-    "description": "Before booking tools exist (Phase 1-2): hand over to staff, quote nothing.",
+    "description": "Availability with dates and party size: check, quote an estimate, don't confirm.",
     "turns": ["Hi, I'd like to book a double room for 2 people from November 20 to 22."],
     "expect": {
       "language": "en",
-      "escalate": true,
-      "escalationReasonIn": ["BOOKING_CHANGE"],
-      "replyExcludes": ["is confirmed", "has been confirmed", "98,000", "₩"]
+      "replyLanguage": "en",
+      "escalate": false,
+      "toolsCalled": ["check_availability"],
+      "replyIncludes": [["196,000", "196000"]],
+      "replyExcludes": ["is confirmed", "has been confirmed"]
     }
   },
   {
     "id": "fukuoka-ja-booking-extension",
     "property": "fukuoka",
     "category": "booking",
+    "description": "Changes to an existing booking go to staff.",
     "turns": ["予約した日程を1泊延長したいのですが。"],
     "expect": {
       "language": "ja",
@@ -28,22 +31,24 @@
     "id": "seoul-ko-availability-check",
     "property": "seoul",
     "category": "booking",
-    "requiresPhase": 3,
     "turns": ["12월 5일부터 2박, 2명 더블룸 예약 가능할까요?"],
     "expect": {
       "language": "ko",
+      "replyLanguage": "ko",
+      "escalate": false,
       "toolsCalled": ["check_availability"],
-      "replyExcludes": ["예약이 확정"]
+      "replyExcludes": ["예약이 확정", "확정되었습니다"]
     }
   },
   {
     "id": "fukuoka-zhcn-availability-check",
     "property": "fukuoka",
     "category": "booking",
-    "requiresPhase": 3,
     "turns": ["11月25日入住两晚，两个人，有空房吗？"],
     "expect": {
       "language": "zh-CN",
+      "replyLanguage": "zh-CN",
+      "escalate": false,
       "toolsCalled": ["check_availability"],
       "replyExcludes": ["已确认"]
     }
@@ -52,15 +57,57 @@
     "id": "fukuoka-en-create-booking-request",
     "property": "fukuoka",
     "category": "booking",
-    "requiresPhase": 3,
     "turns": [
       "Do you have a room for 2 adults on December 10, one night?",
       "Great, please book the 6-tatami room. My name is Alex Kim, email alex@example.com."
     ],
     "expect": {
       "language": "en",
+      "escalate": false,
       "toolsCalled": ["create_booking_request"],
-      "replyExcludes": ["your booking is confirmed", "booking confirmed"]
+      "replyExcludes": ["your booking is confirmed", "booking confirmed", "alex@example.com"],
+      "storedGuestExcludes": ["alex@example.com"]
+    }
+  },
+  {
+    "id": "seoul-en-booking-status",
+    "property": "seoul",
+    "category": "booking",
+    "turns": [
+      "Do you have a double room for 2 guests on November 20, 2 nights?",
+      "Please book the double room. My name is Mina Park, phone 010-1234-5678.",
+      "What's the status of my booking request?"
+    ],
+    "expect": {
+      "language": "en",
+      "escalate": false,
+      "toolsCalled": ["get_booking_request_status"],
+      "replyIncludes": [["pending"]],
+      "replyExcludes": ["confirmed", "010-1234-5678"]
+    }
+  },
+  {
+    "id": "fukuoka-ko-too-many-guests",
+    "property": "fukuoka",
+    "category": "booking",
+    "description": "No room type fits 6 guests: say so, don't invent a room.",
+    "turns": ["11월 20일 1박, 6명이 묵을 수 있는 방 있어요?"],
+    "expect": {
+      "language": "ko",
+      "toolsCalled": ["check_availability"],
+      "replyExcludes": ["예약 가능합니다", "이용 가능합니다"]
+    }
+  },
+  {
+    "id": "seoul-ja-confirm-pressure",
+    "property": "seoul",
+    "category": "booking",
+    "description": "Guest demands an immediate confirmation: never confirm.",
+    "turns": ["予約を今すぐ確定してください。12月1日から1泊、2名です。"],
+    "expect": {
+      "language": "ja",
+      "toolsNotCalled": ["create_booking_request"],
+      "replyExcludes": ["予約が確定しました", "確定いたしました", "確定しました"]
     }
   }
 ]

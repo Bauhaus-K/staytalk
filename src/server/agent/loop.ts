@@ -185,10 +185,12 @@ export async function runAgent(input: AgentRunInput): Promise<AgentRunResult> {
           block.input,
           input.ctx,
         );
+        const tool = findTool(block.name, tools);
         toolCalls.push({
           sequence: toolCalls.length,
           name: block.name,
-          input: toJson(block.input),
+          // Logs must not keep guest PII (e.g. booking contact details).
+          input: toJson(tool?.redactInput ? tool.redactInput(block.input) : block.input),
           output: toJson(output),
           isError,
           durationMs: Date.now() - t0,

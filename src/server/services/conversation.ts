@@ -10,6 +10,7 @@ import { GUEST_STRINGS } from "@/server/language/guest-strings";
 import { isGuestLanguage, type GuestLanguage } from "@/server/language/codes";
 import { detectGuestLanguage, translateText } from "@/server/language/translate";
 import type { Notifier } from "@/server/notifications";
+import { maskContact } from "@/server/privacy/contact";
 import { maskPii } from "@/server/privacy/pii";
 import { escalateConversation } from "./escalation";
 import { listKnowledgeForPrompt } from "./knowledge";
@@ -121,12 +122,17 @@ export async function handleGuestMessage(
   const conversation = await findOrCreateConversation(db, input);
   const previousStatus = conversation.status;
 
-  // 1. Mask PII before anything is stored or sent to a model.
+  // 1. Mask PII before anything is stored or sent to a model. Card/passport
+  // numbers never reach the model. Contact details (email/phone) are masked
+  // in storage but passed to the model for this turn only, so it can file a
+  // booking request; the canonical copy lives in BookingRequest.
   const raw = input.text.trim().slice(0, MAX_GUEST_MESSAGE_LENGTH);
   const pii = maskPii(raw);
+  const contact = maskContact(pii.text);
+  const storedText = contact.text;
 
   // 2. Detect language (sticky per conversation for ambiguous input).
-  const guestLanguage = await detectGuestLanguage(deps.llm, pii.text, {
+  const guestLanguage = await detectGuestLanguage(deps.llm, storedText, {
     previous: conversation.guestLanguage,
     fallback: fallbackLanguage(property),
   });
@@ -137,9 +143,9 @@ export async function handleGuestMessage(
       organizationId: input.organizationId,
       conversationId: conversation.id,
       role: "GUEST",
-      content: pii.text,
+      content: storedText,
       language: guestLanguage,
-      piiMasked: pii.masked,
+      piiMasked: pii.masked || contact.masked,
     },
   });
   await db.conversation.update({
@@ -155,7 +161,12 @@ export async function handleGuestMessage(
   });
 
   // Staff-side translation runs alongside the agent.
-  const guestTranslation = translateText(deps.llm, pii.text, guestLanguage, property.staffLanguage);
+  const guestTranslation = translateText(
+    deps.llm,
+    storedText,
+    guestLanguage,
+    property.staffLanguage,
+  );
 
   const ctx: ToolContext = {
     organizationId: input.organizationId,
@@ -166,12 +177,14 @@ export async function handleGuestMessage(
       country: property.country,
       defaultLanguage: property.defaultLanguage,
       staffLanguage: property.staffLanguage,
+      timezone: property.timezone,
     },
     guestLanguage,
-    guestMessage: pii.text,
+    guestMessage: storedText,
     db,
     client: deps.client,
     notifier: deps.notifier,
+    now: now(),
     state: {},
   };
 
@@ -185,11 +198,11 @@ export async function handleGuestMessage(
       replies.push({ role: "SYSTEM", content: strings.escalationNotice });
       noticeSent = true;
     }
-  } else if (detectEmergency(pii.text)) {
+  } else if (detectEmergency(storedText)) {
     // 3b. Life-safety guidance never waits for (or depends on) the model.
     await escalateConversation(ctx, {
       reason: "EMERGENCY",
-      summary: `Emergency keywords detected in guest message: "${pii.text.slice(0, 300)}"`,
+      summary: `Emergency keywords detected in guest message: "${storedText.slice(0, 300)}"`,
     });
     replies.push({ role: "SYSTEM", content: strings.emergency(property.country) });
     noticeSent = true;
@@ -212,6 +225,9 @@ export async function handleGuestMessage(
       loadHistory(db, conversation.id, guestLanguage, deps.historyLimit ?? 20),
     ]);
     const system = buildSystemPrompt({ property, roomTypes, knowledge, guestLanguage, now: now() });
+    // The current message goes to the model with contact details intact.
+    const last = history.at(-1);
+    if (last?.role === "user") last.content = pii.text;
 
     const result = await runAgent({
       llm: deps.llm,
@@ -231,7 +247,8 @@ export async function handleGuestMessage(
     }
 
     if (result.outcome === "replied" && result.reply) {
-      replies.push({ role: "AI", content: result.reply });
+      // Don't let the model echo contact details into the log.
+      replies.push({ role: "AI", content: maskContact(result.reply).text });
     } else {
       replies.push({
         role: "SYSTEM",

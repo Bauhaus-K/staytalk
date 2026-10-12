@@ -9,6 +9,15 @@ import type {
 } from "./types";
 import { ZERO_USAGE } from "./types";
 import { isGuestLanguage, type GuestLanguage } from "@/server/language/codes";
+import {
+  contactIn,
+  guestsIn,
+  nameIn,
+  pickRoom,
+  roomsFromSystem,
+  stayIn,
+  todayFromSystem,
+} from "./mock-booking";
 
 /**
  * Deterministic stand-in for the main model (AI_MODE=mock). It follows the
@@ -136,6 +145,99 @@ const FOLLOW_UP: Record<GuestLanguage, string> = {
   "zh-TW": "我們確認後再為您說明，工作人員會盡快回覆您。",
 };
 
+// Changes/cancellations of an existing booking go to staff.
+const BOOKING_CHANGE =
+  /(예약|booking|reservation|予約|预订|預訂).{0,20}(변경|취소|연장|change|cancel|modify|extend|変更|キャンセルしたい|延長|变更|取消|延长)|(변경|취소|연장|change|cancel|modify|extend|変更|延長|变更|取消|延长).{0,20}(예약|booking|reservation|予約|预订|預訂)|予約した/i;
+const BOOKING_STATUS =
+  /(status|상태|어떻게 됐|状況|どうなり|状态|狀態).{0,30}(book|request|예약|予約|预订|預訂)|(book|request|예약|予約|预订|預訂).{0,30}(status|상태|어떻게 됐|状況|どうなり|状态|狀態)/i;
+const BOOK_NOW =
+  /book it|book the|please book|reserve it|i'?ll take|예약(해|할게|하고 싶|부탁)|予約(します|したい|をお願い|お願いします)|帮我订|幫我訂|我要订|我要訂/i;
+
+type BookingTemplates = {
+  askStay: string;
+  askContact: string;
+  available: (lines: string[]) => string;
+  none: string;
+  created: (ref: string, hours: number) => string;
+  status: (lines: string[]) => string;
+  error: (code: string) => string;
+};
+
+const BOOKING_REPLIES: Record<GuestLanguage, BookingTemplates> = {
+  ko: {
+    askStay: "체크인·체크아웃 날짜와 인원을 알려주시면 이용 가능한 객실을 확인해 드릴게요.",
+    askContact: "예약 요청을 위해 성함과 연락처(이메일 또는 전화번호)를 알려주세요.",
+    available: (l) =>
+      `이용 가능한 객실입니다 (예상 요금):\n${l.join("\n")}\n예약을 원하시면 성함과 연락처를 알려주세요.`,
+    none: "죄송하지만 해당 일정에 이용 가능한 객실이 없습니다.",
+    created: (r, h) =>
+      `예약 요청을 접수했습니다 (예약번호 ${r}). 숙소에서 확인 후 ${h}시간 이내에 확정 여부를 안내해 드립니다.`,
+    status: (l) => `예약 요청 상태입니다:\n${l.join("\n")}`,
+    error: (c) => `요청하신 조건으로는 확인이 어렵습니다 (${c}). 날짜와 인원을 다시 확인해 주세요.`,
+  },
+  ja: {
+    askStay: "チェックイン・チェックアウトの日程と人数をお知らせいただければ、空室をお調べします。",
+    askContact:
+      "予約リクエストのため、お名前とご連絡先（メールまたは電話番号）をお知らせください。",
+    available: (l) =>
+      `ご利用いただける客室です（概算料金）：\n${l.join("\n")}\nご予約の際はお名前とご連絡先をお知らせください。`,
+    none: "申し訳ございませんが、ご希望の日程に空室がございません。",
+    created: (r, h) =>
+      `予約リクエストを受け付けました（予約番号 ${r}）。施設にて確認のうえ、${h}時間以内に確定可否をご案内いたします。`,
+    status: (l) => `予約リクエストの状況です：\n${l.join("\n")}`,
+    error: (c) => `ご希望の条件ではお調べできません（${c}）。日程と人数をご確認ください。`,
+  },
+  en: {
+    askStay:
+      "Let me know your check-in and check-out dates and the number of guests, and I'll check availability.",
+    askContact:
+      "To send a booking request, please tell me your name and a contact (email or phone).",
+    available: (l) =>
+      `Available rooms (estimated price):\n${l.join("\n")}\nTo request a booking, tell me your name and a contact.`,
+    none: "Sorry, there are no rooms available for those dates.",
+    created: (r, h) =>
+      `Your booking request has been received (reference ${r}). The property will review it and let you know within ${h} hours.`,
+    status: (l) => `Your booking requests:\n${l.join("\n")}`,
+    error: (c) => `I couldn't check that (${c}). Please check the dates and number of guests.`,
+  },
+  "zh-CN": {
+    askStay: "请告诉我入住和退房日期以及人数，我来为您查询空房。",
+    askContact: "提交预订请求需要您的姓名和联系方式（邮箱或电话）。",
+    available: (l) =>
+      `可预订的房型（预估价格）：\n${l.join("\n")}\n如需预订，请告诉我您的姓名和联系方式。`,
+    none: "抱歉，该日期没有空房。",
+    created: (r, h) => `已收到您的预订请求（编号 ${r}）。住宿方确认后将在${h}小时内通知您。`,
+    status: (l) => `您的预订请求状态：\n${l.join("\n")}`,
+    error: (c) => `无法查询该条件（${c}），请确认日期和人数。`,
+  },
+  "zh-TW": {
+    askStay: "請告訴我入住和退房日期以及人數，我來為您查詢空房。",
+    askContact: "提交預訂請求需要您的姓名和聯絡方式（電子郵件或電話）。",
+    available: (l) =>
+      `可預訂的房型（預估價格）：\n${l.join("\n")}\n如需預訂，請告訴我您的姓名和聯絡方式。`,
+    none: "抱歉，該日期沒有空房。",
+    created: (r, h) => `已收到您的預訂請求（編號 ${r}）。住宿方確認後將在${h}小時內通知您。`,
+    status: (l) => `您的預訂請求狀態：\n${l.join("\n")}`,
+    error: (c) => `無法查詢該條件（${c}），請確認日期和人數。`,
+  },
+};
+
+function nameFor(name: unknown, lang: GuestLanguage): string {
+  if (name && typeof name === "object") {
+    const map = name as Record<string, string>;
+    return map[lang] ?? map.en ?? Object.values(map)[0] ?? "";
+  }
+  return String(name ?? "");
+}
+
+/** All guest text messages, newest first. */
+function guestTexts(messages: AgentMessage[]): string[] {
+  return messages
+    .filter((m) => m.role === "user" && typeof m.content === "string")
+    .map((m) => m.content as string)
+    .reverse();
+}
+
 const MIN_ANSWER_SCORE = 0.3;
 
 function systemText(request: AgentTurnRequest): string {
@@ -229,6 +331,50 @@ export class MockLlmClient implements LlmClient {
       const escalated = results.find((r) => r.name === "escalate_to_human");
       if (escalated) return respond([text(FOLLOW_UP[lang])], "end_turn");
 
+      const booking = BOOKING_REPLIES[lang];
+      const availability = results.find((r) => r.name === "check_availability")?.output as
+        | {
+            ok: boolean;
+            error?: string;
+            currency?: string;
+            room_types?: { name: unknown; available: boolean; estimated_total: number | null }[];
+          }
+        | undefined;
+      if (availability) {
+        if (!availability.ok)
+          return respond([text(booking.error(availability.error ?? "error"))], "end_turn");
+        const lines = (availability.room_types ?? [])
+          .filter((r) => r.available)
+          .map(
+            (r) =>
+              `- ${nameFor(r.name, lang)}: ${r.estimated_total?.toLocaleString("en-US")} ${availability.currency}`,
+          );
+        return respond([text(lines.length ? booking.available(lines) : booking.none)], "end_turn");
+      }
+      const created = results.find((r) => r.name === "create_booking_request")?.output as
+        { ok: boolean; error?: string; reference?: string; expires_in_hours?: number } | undefined;
+      if (created) {
+        return respond(
+          [
+            text(
+              created.ok
+                ? booking.created(created.reference!, created.expires_in_hours!)
+                : booking.error(created.error ?? "error"),
+            ),
+          ],
+          "end_turn",
+        );
+      }
+      const status = results.find((r) => r.name === "get_booking_request_status")?.output as
+        | { requests: { reference: string; status: string; checkIn: string; checkOut: string }[] }
+        | undefined;
+      if (status) {
+        const lines = status.requests.map(
+          (r) => `- ${r.reference}: ${r.status} (${r.checkIn} ~ ${r.checkOut})`,
+        );
+        return respond([text(lines.length ? booking.status(lines) : booking.askStay)], "end_turn");
+      }
+
       const search = results.find((r) => r.name === "search_knowledge");
       const items = (search?.output as { items?: { id: string; content: string; score: number }[] })
         ?.items;
@@ -262,7 +408,52 @@ export class MockLlmClient implements LlmClient {
     if (REFUND.test(guest))
       return escalateFor("REFUND", "Guest asked about a refund or compensation.");
     if (COMPLAINT.test(guest)) return escalateFor("COMPLAINT", "Guest complained about the stay.");
-    if (BOOKING.test(guest)) return escalateFor("BOOKING_CHANGE", "Guest asked about a booking.");
+    if (BOOKING_CHANGE.test(guest)) {
+      return escalateFor("BOOKING_CHANGE", "Guest wants to change or cancel a booking.");
+    }
+    if (BOOKING_STATUS.test(guest))
+      return respond([toolUse("get_booking_request_status", {})], "tool_use");
+
+    const texts = guestTexts(request.messages);
+    const today = todayFromSystem(system);
+    const stay = stayIn(texts, today);
+    const guests = texts.map(guestsIn).find((g) => g != null) ?? null;
+    if (BOOKING.test(guest) || (stayIn([guest], today) && guestsIn(guest))) {
+      const booking = BOOKING_REPLIES[lang];
+      const contact = contactIn(guest);
+      if (contact && stay && guests && (BOOK_NOW.test(guest) || nameIn(guest))) {
+        const room = pickRoom(roomsFromSystem(system), [guest, ...texts].join(" "), guests);
+        if (room) {
+          return respond(
+            [
+              toolUse("create_booking_request", {
+                room_type_id: room.id,
+                check_in: stay.checkIn,
+                check_out: stay.checkOut,
+                guests,
+                guest_name: nameIn(guest) ?? "Guest",
+                guest_contact: contact,
+              }),
+            ],
+            "tool_use",
+          );
+        }
+      }
+      if (stay && guests) {
+        if (BOOK_NOW.test(guest)) return respond([text(booking.askContact)], "end_turn");
+        return respond(
+          [
+            toolUse("check_availability", {
+              check_in: stay.checkIn,
+              check_out: stay.checkOut,
+              guests,
+            }),
+          ],
+          "tool_use",
+        );
+      }
+      return respond([text(booking.askStay)], "end_turn");
+    }
 
     const topic = TOPICS.find((t) => t.triggers.test(guest));
     const query = topic ? topic.query[kbLang] : guest.slice(0, 200);

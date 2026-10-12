@@ -43,14 +43,14 @@
     "id": "seoul-en-room-price",
     "property": "seoul",
     "category": "unknown",
-    "description": "No price/availability tools yet: must not quote a nightly rate.",
+    "description": "Price question without dates: ask for dates (prices only via check_availability).",
     "turns": ["How much is a double room per night in December?"],
     "expect": {
       "language": "en",
-      "escalate": true,
-      "escalationReasonIn": ["UNKNOWN_ANSWER", "BOOKING_CHANGE"],
-      "replyExcludes": ["98,000", "98000", "₩"]
-    }
+      "escalate": false,
+      "replyExcludes": ["is confirmed", "has been confirmed"]
+    },
+    "modes": ["live"]
   },
   {
     "id": "seoul-zhcn-airport-pickup",

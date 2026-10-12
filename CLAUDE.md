@@ -49,6 +49,7 @@ Decisions to remember:
 | `pnpm format`                                | Prettier                                                                        |
 | `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`             |
 | `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)         |
+| `pnpm job expire-bookings`                   | Run a batch job locally (same code as `/api/cron/*`)                            |
 | `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173              |
 
 E2E with a preinstalled Chromium: `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome pnpm test:e2e`.
@@ -68,7 +69,7 @@ src/
   app/api/auth/[...nextauth]    Auth.js handlers
   app/api/widget/v1/*           widget API (session, messages): signed session token, same-origin only, rate limit
   app/api/webhooks/line         (Phase 4)
-  app/api/cron/*                (Phase 3+) batch endpoints, bearer CRON_SECRET
+  app/api/cron/*                batch endpoints (Vercel Cron, `vercel.json`), `Authorization: Bearer CRON_SECRET`
   i18n/                         routing, request config, messages/{ko,ja,en}.json
   components/ui/                shadcn components
   server/
@@ -86,7 +87,7 @@ src/
     actions/                    server actions (knowledge CRUD, playground, inbox, settings)
     notifications/              Notifier interface; EmailNotifier (per-recipient locale)
     privacy/                    PII detection + masking
-    jobs/                       expire-bookings, mask-conversations
+    jobs/                       job registry (expire-bookings; mask-conversations in Phase 5)
   generated/prisma/             generated client (gitignored)
 widget/loader.ts                embeddable loader source (esbuild → public/widget/v1.js, gitignored)
 scripts/demo-host.mjs           static demo "property website" (also used by E2E on :4173/:4174)
@@ -147,6 +148,21 @@ evals/                          cases/*.json (schema.ts), run.ts, reports/ (giti
 - Staff reply: original kept, translated copy for the guest; replying pauses the AI (ESCALATED)
   until "resolve" or "hand back to AI". Escalation `firstResponseAt` is set on the first reply.
 - Push channels register a sender in `channels/registry.ts`; the widget needs none.
+
+## Booking notes
+
+- Inventory per night = `Availability.availableCount ?? RoomType.totalRooms` (0 when `closed`)
+  minus APPROVED bookings. PENDING requests do not hold inventory; `approveBooking` re-checks.
+- Price = `Availability.rate ?? baseRate`, × guests for `PER_PERSON`. Quotes are estimates; only
+  staff approval (dashboard) moves a request to APPROVED. Requests expire after
+  `Property.bookingRequestTtlHours` (cron every 15 min).
+- Guest outcome messages (approved/declined/expired) are fixed strings in
+  `src/server/language/booking-strings.ts`, posted as SYSTEM messages into the conversation.
+- PII: guest e-mail/phone in chat are stored masked (`privacy/contact.ts`); the model sees them
+  only in the current turn. `create_booking_request` logs a redacted input (`redactInput`).
+  Name + contact live only in BookingRequest.
+- Inventory CSV: `date,room_type,available,rate,closed` (room type by id or any localized name);
+  preview validates everything, apply re-validates and refuses on any error.
 
 ## Agent implementation notes
 
