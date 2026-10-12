@@ -29,6 +29,8 @@ export type AgentTurnResponse = {
 };
 
 export type CompletionRequest = {
+  /** What the call is for (usage accounting). */
+  purpose?: "translation" | "language_detection";
   system: string;
   prompt: string;
   maxTokens: number;

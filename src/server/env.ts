@@ -17,6 +17,7 @@ const schema = z.object({
   AI_TIMEOUT_MS: z.coerce.number().int().positive().default(30_000),
   LINE_MODE: z.enum(["mock", "live"]).default("mock"),
   CRON_SECRET: z.string().optional(),
+  APP_ENCRYPTION_KEY: z.string().optional(),
 });
 
 export type Env = z.infer<typeof schema>;

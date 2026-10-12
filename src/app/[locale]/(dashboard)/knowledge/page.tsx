@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { requireTenant } from "@/server/auth/session";
 import { KNOWLEDGE_CATEGORIES } from "@/server/services/knowledge";
 import { resolveActiveProperty } from "@/server/services/property";
+import { countUnansweredQuestions } from "@/server/services/unanswered";
 import { DeleteKnowledgeButton } from "./delete-button";
 
 export default async function KnowledgePage({
@@ -46,6 +47,8 @@ export default async function KnowledgePage({
         }
       : {}),
   };
+  const unanswered = await countUnansweredQuestions(db, active.id);
+  const tu = await getTranslations("unanswered");
   const items = await db.knowledgeItem.findMany({
     where,
     orderBy: [{ category: "asc" }, { createdAt: "asc" }],
@@ -66,6 +69,15 @@ export default async function KnowledgePage({
           <p className="text-sm text-muted-foreground">{t("description")}</p>
         </div>
         <div className="flex items-center gap-3">
+          {unanswered > 0 ? (
+            <Link
+              href={`/knowledge/unanswered?property=${active.id}`}
+              className="text-sm underline"
+              data-testid="unanswered-link"
+            >
+              {tu("link", { count: unanswered })}
+            </Link>
+          ) : null}
           <PropertySwitcher properties={properties} activeId={active.id} />
           <Button asChild>
             <Link href={`/knowledge/new?property=${active.id}`}>

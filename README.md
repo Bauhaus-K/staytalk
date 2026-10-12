@@ -69,6 +69,14 @@ pnpm demo:host    # 숙소 홈페이지 역할의 정적 페이지 → http://lo
 
 대기 중인 요청은 24시간 후 만료됩니다. 로컬에서는 `pnpm job expire-bookings`, 배포 환경에서는 `/api/cron/expire-bookings`(Vercel Cron, `CRON_SECRET`)로 실행됩니다.
 
+## 지표와 LINE
+
+- **지표**: 대화 수, 자동 처리율(사람 개입 없이 종료된 대화 비율), 평균 첫 응답 시간, 예약 승인률, AI 비용 추정, 언어·에스컬레이션 사유 분포.
+  AI만 응대한 대화는 24시간 무응답 시 자동 종료됩니다(`pnpm job close-idle-conversations`).
+- **AI가 답하지 못한 질문**: 지식베이스 화면의 링크에서 원클릭으로 지식에 추가합니다.
+- **LINE**: 설정 화면에서 채널 시크릿·액세스 토큰을 등록하고 표시되는 웹훅 URL을 LINE Developers 콘솔에 입력합니다.
+  자격 증명은 `APP_ENCRYPTION_KEY`로 암호화해 저장합니다. `LINE_MODE=mock`이면 실제 LINE API를 호출하지 않습니다.
+
 ## AI 평가 (evals)
 
 ```bash

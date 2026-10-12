@@ -92,6 +92,12 @@ enum EscalationReason {
   USAGE_LIMIT
 }
 
+enum UsageKind {
+  AGENT
+  TRANSLATION
+  LANGUAGE_DETECTION
+}
+
 enum EscalationStatus {
   OPEN
   RESOLVED
@@ -107,17 +113,19 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users           User[]
-  properties      Property[]
-  roomTypes       RoomType[]
-  availabilities  Availability[]
-  knowledgeItems  KnowledgeItem[]
-  conversations   Conversation[]
-  messages        Message[]
-  bookingRequests BookingRequest[]
-  escalations     Escalation[]
-  agentRuns       AgentRun[]
-  toolCalls       ToolCall[]
+  users              User[]
+  properties         Property[]
+  roomTypes          RoomType[]
+  availabilities     Availability[]
+  knowledgeItems     KnowledgeItem[]
+  conversations      Conversation[]
+  messages           Message[]
+  bookingRequests    BookingRequest[]
+  escalations        Escalation[]
+  agentRuns          AgentRun[]
+  toolCalls          ToolCall[]
+  llmUsages          LlmUsage[]
+  channelConnections ChannelConnection[]
 }
 
 model User {
@@ -211,11 +219,13 @@ model Property {
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
 
-  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  roomTypes       RoomType[]
-  knowledgeItems  KnowledgeItem[]
-  conversations   Conversation[]
-  bookingRequests BookingRequest[]
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  roomTypes          RoomType[]
+  knowledgeItems     KnowledgeItem[]
+  conversations      Conversation[]
+  bookingRequests    BookingRequest[]
+  llmUsages          LlmUsage[]
+  channelConnections ChannelConnection[]
 
   @@unique([id, organizationId])
   @@index([organizationId])
@@ -329,6 +339,7 @@ model Conversation {
   escalations     Escalation[]
   bookingRequests BookingRequest[]
   agentRuns       AgentRun[]
+  llmUsages       LlmUsage[]
 
   @@unique([id, organizationId])
   @@index([organizationId, status, lastMessageAt])
@@ -413,6 +424,8 @@ model Escalation {
   resolvedAt           DateTime?
   resolvedById         String?
   addedKnowledgeItemId String?
+  // Staff chose not to turn this unanswered question into knowledge.
+  knowledgeDismissedAt DateTime?
   createdAt            DateTime         @default(now())
 
   organization       Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -476,4 +489,51 @@ model ToolCall {
 
   @@index([organizationId])
   @@index([agentRunId, sequence])
+}
+
+// One row per LLM call (main and fast model). Source of truth for usage
+// limits and cost estimates; AgentRun keeps per-run totals for tracing.
+model LlmUsage {
+  id               String    @id @default(cuid())
+  organizationId   String
+  propertyId       String
+  conversationId   String?
+  kind             UsageKind
+  model            String
+  inputTokens      Int       @default(0)
+  outputTokens     Int       @default(0)
+  cacheReadTokens  Int       @default(0)
+  cacheWriteTokens Int       @default(0)
+  // Estimated cost in millionths of a USD (from the price table in code).
+  costMicroUsd     Int       @default(0)
+  createdAt        DateTime  @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property      @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, propertyId, createdAt])
+  @@index([conversationId])
+}
+
+// Messaging channel credentials per property (LINE now; Kakao later).
+// Secrets are encrypted at rest (src/server/security/secrets.ts).
+model ChannelConnection {
+  id                   String   @id @default(cuid())
+  organizationId       String
+  propertyId           String
+  channel              Channel
+  // LINE: the bot's channel id (shown to staff for reference).
+  externalId           String?
+  secretEncrypted      String
+  accessTokenEncrypted String
+  active               Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property     @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+
+  @@unique([propertyId, channel])
+  @@index([organizationId])
 }

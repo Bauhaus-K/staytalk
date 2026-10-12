@@ -14,7 +14,7 @@ import { maskContact } from "@/server/privacy/contact";
 import { maskPii } from "@/server/privacy/pii";
 import { escalateConversation } from "./escalation";
 import { listKnowledgeForPrompt } from "./knowledge";
-import { isOverMonthlyLimit } from "./usage";
+import { isOverMonthlyLimit, trackUsage } from "./usage";
 
 export const MAX_GUEST_MESSAGE_LENGTH = 2000;
 
@@ -121,6 +121,13 @@ export async function handleGuestMessage(
 
   const conversation = await findOrCreateConversation(db, input);
   const previousStatus = conversation.status;
+  // Every model call of this turn is recorded in the usage ledger.
+  const llm = trackUsage(deps.llm, {
+    db,
+    organizationId: input.organizationId,
+    propertyId: property.id,
+    conversationId: conversation.id,
+  });
 
   // 1. Mask PII before anything is stored or sent to a model. Card/passport
   // numbers never reach the model. Contact details (email/phone) are masked
@@ -132,7 +139,7 @@ export async function handleGuestMessage(
   const storedText = contact.text;
 
   // 2. Detect language (sticky per conversation for ambiguous input).
-  const guestLanguage = await detectGuestLanguage(deps.llm, storedText, {
+  const guestLanguage = await detectGuestLanguage(llm, storedText, {
     previous: conversation.guestLanguage,
     fallback: fallbackLanguage(property),
   });
@@ -161,12 +168,7 @@ export async function handleGuestMessage(
   });
 
   // Staff-side translation runs alongside the agent.
-  const guestTranslation = translateText(
-    deps.llm,
-    storedText,
-    guestLanguage,
-    property.staffLanguage,
-  );
+  const guestTranslation = translateText(llm, storedText, guestLanguage, property.staffLanguage);
 
   const ctx: ToolContext = {
     organizationId: input.organizationId,
@@ -230,7 +232,7 @@ export async function handleGuestMessage(
     if (last?.role === "user") last.content = pii.text;
 
     const result = await runAgent({
-      llm: deps.llm,
+      llm,
       system,
       history,
       ctx,
@@ -273,7 +275,7 @@ export async function handleGuestMessage(
   const stored: OutgoingMessage[] = [];
   for (const reply of replies) {
     const translation = await translateText(
-      deps.llm,
+      llm,
       reply.content,
       guestLanguage,
       property.staffLanguage,

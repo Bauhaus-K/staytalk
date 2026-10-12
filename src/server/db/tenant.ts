@@ -16,6 +16,8 @@ export const TENANT_MODELS = [
   "Escalation",
   "AgentRun",
   "ToolCall",
+  "LlmUsage",
+  "ChannelConnection",
 ] as const;
 
 const tenantModels = new Set<string>(TENANT_MODELS);

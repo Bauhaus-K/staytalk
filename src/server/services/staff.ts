@@ -3,6 +3,7 @@ import type { TenantDb } from "@/server/db/tenant";
 import type { LlmClient } from "@/server/agent/llm/types";
 import { detectLanguageHeuristic } from "@/server/language/detect";
 import { translateText } from "@/server/language/translate";
+import { trackUsage } from "./usage";
 
 export const MAX_STAFF_MESSAGE_LENGTH = 4000;
 
@@ -38,7 +39,17 @@ export async function sendStaffReply(
     detectLanguageHeuristic(text)?.language ?? conversation.property.staffLanguage;
   const guestLanguage = conversation.guestLanguage;
   const translation = guestLanguage
-    ? await translateText(llm, text, staffLanguage, guestLanguage)
+    ? await translateText(
+        trackUsage(llm, {
+          db,
+          organizationId: input.organizationId,
+          propertyId: conversation.propertyId,
+          conversationId: conversation.id,
+        }),
+        text,
+        staffLanguage,
+        guestLanguage,
+      )
     : null;
 
   const message = await db.message.create({

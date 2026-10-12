@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getLlmClient } from "@/server/agent/llm";
 import { requireTenant } from "@/server/auth/session";
+import { ensureRuntime } from "@/server/services/runtime";
 import {
   MAX_STAFF_MESSAGE_LENGTH,
   resolveConversation,
@@ -33,6 +34,7 @@ export async function staffReplyAction(
   if (!parsed.success) return { error: "generic" };
   const { locale, conversationId, text } = parsed.data;
   const { user, db } = await requireTenant(locale);
+  ensureRuntime();
   try {
     await sendStaffReply(db, getLlmClient(), {
       organizationId: user.organizationId,
@@ -55,6 +57,7 @@ export async function conversationStatusAction(formData: FormData) {
   if (!parsed.success) return;
   const { locale, conversationId, action } = parsed.data;
   const { user, db } = await requireTenant(locale);
+  ensureRuntime();
   const input = { conversationId, userId: user.id };
   if (action === "resolve") await resolveConversation(db, input);
   else await returnToAi(db, input);

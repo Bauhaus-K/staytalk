@@ -7,6 +7,7 @@ import { MemoryNotifier } from "../../src/server/notifications";
 import { handleGuestMessage } from "../../src/server/services/conversation";
 import { resolveConversation, sendStaffReply } from "../../src/server/services/staff";
 import { createBookingRequest } from "../../src/server/services/booking";
+import { closeIdleConversations } from "../../src/server/services/lifecycle";
 import { fukuokaRyokan } from "./data/fukuoka";
 import { seoulGuesthouse } from "./data/seoul";
 import type { SeedProperty } from "./data/types";
@@ -180,6 +181,33 @@ export async function seedDemo(client: DbClient, options: { sampleConversations?
       await seedConversations(client, data.organization.id, property.id);
     }
     results.push(property);
+  }
+  if (options.sampleConversations) {
+    // Close the sample AI conversations as if a day had passed, so the
+    // automation-rate metric has data. Leaves one open per property.
+    await closeIdleConversations(client, new Date(Date.now() + 25 * 3_600_000));
+    for (const data of DEMO_PROPERTIES) {
+      const property = results.find((p) => p.organizationId === data.organization.id)!;
+      await handleGuestMessage(
+        {
+          organizationId: data.organization.id,
+          propertyId: property.id,
+          channel: "WEB_WIDGET",
+          guestSessionId: "seed-open",
+          text:
+            data.property.defaultLanguage === "ja"
+              ? "Wi-Fiのパスワードはどこですか？"
+              : "와이파이 있나요?",
+        },
+        {
+          client,
+          llm: new MockLlmClient(),
+          notifier: new MemoryNotifier(),
+          maxToolCalls: 6,
+          timeoutMs: 10_000,
+        },
+      );
+    }
   }
   return results;
 }

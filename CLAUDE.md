@@ -37,20 +37,20 @@ Decisions to remember:
 
 ## Commands
 
-| Command                                      | Purpose                                                                         |
-| -------------------------------------------- | ------------------------------------------------------------------------------- |
-| `docker compose up -d`                       | Start Postgres (:5432, dbs `staytalk` + `staytalk_test`) and Mailpit (UI :8025) |
-| `pnpm dev`                                   | Dev server (http://localhost:3000)                                              |
-| `pnpm db:migrate`                            | Create/apply a migration (`prisma migrate dev`)                                 |
-| `pnpm db:deploy` / `pnpm db:seed`            | Apply migrations / seed demo data (idempotent)                                  |
-| `pnpm db:reset`                              | Drop, re-migrate and seed the dev database                                      |
-| `pnpm lint` / `pnpm typecheck` / `pnpm test` | Quality gate (must pass each phase). `test` needs Postgres up                   |
-| `pnpm test:e2e`                              | Playwright; starts its own dev server on :3100 against `staytalk_test`          |
-| `pnpm format`                                | Prettier                                                                        |
-| `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`             |
-| `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)         |
-| `pnpm job expire-bookings`                   | Run a batch job locally (same code as `/api/cron/*`)                            |
-| `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173              |
+| Command                                      | Purpose                                                                                 |
+| -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `docker compose up -d`                       | Start Postgres (:5432, dbs `staytalk` + `staytalk_test`) and Mailpit (UI :8025)         |
+| `pnpm dev`                                   | Dev server (http://localhost:3000)                                                      |
+| `pnpm db:migrate`                            | Create/apply a migration (`prisma migrate dev`)                                         |
+| `pnpm db:deploy` / `pnpm db:seed`            | Apply migrations / seed demo data (idempotent)                                          |
+| `pnpm db:reset`                              | Drop, re-migrate and seed the dev database                                              |
+| `pnpm lint` / `pnpm typecheck` / `pnpm test` | Quality gate (must pass each phase). `test` needs Postgres up                           |
+| `pnpm test:e2e`                              | Playwright; starts its own dev server on :3100 against `staytalk_test`                  |
+| `pnpm format`                                | Prettier                                                                                |
+| `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`                     |
+| `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)                 |
+| `pnpm job <name>`                            | Batch job locally: `expire-bookings`, `close-idle-conversations` (= `/api/cron/<name>`) |
+| `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173                      |
 
 E2E with a preinstalled Chromium: `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome pnpm test:e2e`.
 
@@ -68,8 +68,8 @@ src/
   app/widget/frame              iframe chat UI for guests — own root layout, no dashboard auth
   app/api/auth/[...nextauth]    Auth.js handlers
   app/api/widget/v1/*           widget API (session, messages): signed session token, same-origin only, rate limit
-  app/api/webhooks/line         (Phase 4)
-  app/api/cron/*                batch endpoints (Vercel Cron, `vercel.json`), `Authorization: Bearer CRON_SECRET`
+  app/api/webhooks/line/[id]    LINE webhook per ChannelConnection (signature check, processing in `after()`)
+  app/api/cron/[job]            batch jobs (Vercel Cron, `vercel.json`), `Authorization: Bearer CRON_SECRET`
   i18n/                         routing, request config, messages/{ko,ja,en}.json
   components/ui/                shadcn components
   server/
@@ -80,14 +80,14 @@ src/
     agent/                      loop.ts (manual tool loop), system-prompt.ts, emergency.ts,
                                 tools/ (zod-defined, strict), llm/{anthropic,mock}.ts
     language/                   codes, script-based detection, translation, fixed guest strings
-    channels/                   ChannelAdapter interface, WebWidgetAdapter, push registry (LINE/Kakao: Phase 4)
-    security/                   widget session token (HMAC), rate limiter, origin/CSP helpers
+    channels/                   ChannelAdapter: WebWidgetAdapter, LineAdapter, KakaoAdapter (stub); push registry
+    security/                   widget session token (HMAC), rate limiter, origin/CSP helpers, secrets (AES-GCM)
     services/                   conversation (end-to-end guest message flow), knowledge (trigram+substring
                                 search), escalation, usage, conversation-view, runtime (prod wiring)
     actions/                    server actions (knowledge CRUD, playground, inbox, settings)
-    notifications/              Notifier interface; EmailNotifier (per-recipient locale)
+    notifications/              Notifier interface; EmailNotifier (per-recipient locale); Alimtalk/LINE stubs
     privacy/                    PII detection + masking
-    jobs/                       job registry (expire-bookings; mask-conversations in Phase 5)
+    jobs/                       job registry (expire-bookings, close-idle-conversations; masking in Phase 5)
   generated/prisma/             generated client (gitignored)
 widget/loader.ts                embeddable loader source (esbuild → public/widget/v1.js, gitignored)
 scripts/demo-host.mjs           static demo "property website" (also used by E2E on :4173/:4174)
@@ -163,6 +163,24 @@ evals/                          cases/*.json (schema.ts), run.ts, reports/ (giti
   Name + contact live only in BookingRequest.
 - Inventory CSV: `date,room_type,available,rate,closed` (room type by id or any localized name);
   preview validates everything, apply re-validates and refuses on any error.
+
+## Metrics, usage & channels notes
+
+- Every LLM call goes through `trackUsage()` → one `LlmUsage` row (kind, model, tokens, estimated
+  cost from `agent/llm/pricing.ts`). Monthly limit counts input + output + cache writes +
+  0.1 × cache reads (UTC month). ≥80% → warning on home/metrics; ≥100% → escalate instead of LLM.
+- Automation rate = conversations RESOLVED by AI / all RESOLVED. The `close-idle-conversations`
+  job closes AI_HANDLING conversations idle 24h: AI if no escalation and no staff message, else
+  HUMAN. Metrics exclude `isTest` conversations; days are the property's local calendar days.
+- Unanswered questions = UNKNOWN_ANSWER escalations without `addedKnowledgeItemId` /
+  `knowledgeDismissedAt`; "add to knowledge" links the new item back to the escalation.
+- LINE: credentials per property in `ChannelConnection`, encrypted with `APP_ENCRYPTION_KEY`.
+  Webhook verifies `x-line-signature`, returns 200 immediately and runs the agent in `after()`;
+  replies use the reply token, staff replies/booking outcomes are pushed (`linePusher`).
+  `LINE_MODE=mock` logs API calls instead of sending. Call `ensureRuntime()` in server entry
+  points that may notify staff or push to guests.
+- next-intl messages are ICU: escape literal `<`/`{` with apostrophes (e.g. `'</body>'`);
+  `src/i18n/messages.test.ts` checks syntax and key parity across ko/ja/en.
 
 ## Agent implementation notes
 

@@ -5,6 +5,7 @@ import { asLocale } from "@/i18n/locale";
 import { requireTenant } from "@/server/auth/session";
 import { env } from "@/server/env";
 import { resolveActiveProperty } from "@/server/services/property";
+import { LineForm } from "./line-form";
 import { OriginsForm } from "./origins-form";
 
 export default async function SettingsPage({
@@ -28,6 +29,10 @@ export default async function SettingsPage({
     select: { widgetPublicKey: true, allowedOrigins: true },
   });
   if (!property) return null;
+  const line = await db.channelConnection.findFirst({
+    where: { propertyId: active.id, channel: "LINE" },
+    select: { id: true, externalId: true, active: true },
+  });
 
   const appUrl = env.APP_URL.replace(/\/$/, "");
   const snippet = `<script src="${appUrl}/widget/v1.js" data-key="${property.widgetPublicKey}" async></script>`;
@@ -67,6 +72,29 @@ export default async function SettingsPage({
             propertyId={active.id}
             origins={property.allowedOrigins}
             canEdit={user.role === "OWNER"}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("line")}</CardTitle>
+          <CardDescription>{t("lineDescription")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LineForm
+            locale={locale}
+            propertyId={active.id}
+            canEdit={user.role === "OWNER"}
+            connection={
+              line
+                ? {
+                    externalId: line.externalId,
+                    active: line.active,
+                    webhookUrl: `${appUrl}/api/webhooks/line/${line.id}`,
+                  }
+                : null
+            }
           />
         </CardContent>
       </Card>

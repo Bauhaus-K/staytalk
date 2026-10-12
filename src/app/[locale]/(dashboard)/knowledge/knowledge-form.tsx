@@ -33,9 +33,17 @@ type Props = {
     active: boolean;
   };
   defaultLanguage: string;
+  /** Pre-fill from an unanswered guest question. */
+  fromEscalation?: { id: string; question: string };
 };
 
-export function KnowledgeForm({ locale, propertyId, item, defaultLanguage }: Props) {
+export function KnowledgeForm({
+  locale,
+  propertyId,
+  item,
+  defaultLanguage,
+  fromEscalation,
+}: Props) {
   const t = useTranslations("knowledge");
   const te = useTranslations("enums");
   const [state, action, pending] = useActionState<KnowledgeFormState, FormData>(
@@ -56,6 +64,9 @@ export function KnowledgeForm({ locale, propertyId, item, defaultLanguage }: Pro
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="propertyId" value={propertyId} />
       {item ? <input type="hidden" name="id" value={item.id} /> : null}
+      {fromEscalation ? (
+        <input type="hidden" name="escalationId" value={fromEscalation.id} />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
@@ -91,7 +102,7 @@ export function KnowledgeForm({ locale, propertyId, item, defaultLanguage }: Pro
         <Input
           id="question"
           name="question"
-          defaultValue={item?.question}
+          defaultValue={item?.question ?? fromEscalation?.question}
           placeholder={t("questionHint")}
           maxLength={200}
           required

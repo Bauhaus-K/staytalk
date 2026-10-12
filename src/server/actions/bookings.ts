@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getLlmClient } from "@/server/agent/llm";
 import { requireTenant } from "@/server/auth/session";
+import { ensureRuntime } from "@/server/services/runtime";
 import { DECLINE_REASONS } from "@/server/language/booking-strings";
 import { approveBooking, BookingError, declineBooking } from "@/server/services/booking";
 
@@ -27,6 +28,7 @@ export async function decideBooking(
   if (!parsed.success) return { error: "generic" };
   const { locale, bookingId, intent, reason, note } = parsed.data;
   const { user, db } = await requireTenant(locale);
+  ensureRuntime();
   try {
     if (intent === "approve") {
       await approveBooking(db, { bookingId, userId: user.id });

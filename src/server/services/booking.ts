@@ -15,6 +15,7 @@ import { isGuestLanguage, type GuestLanguage } from "@/server/language/codes";
 import { translateText } from "@/server/language/translate";
 import type { Notifier } from "@/server/notifications";
 import { quoteStay, validateStay, type StayQuery } from "./availability";
+import { trackUsage } from "./usage";
 
 export class BookingError extends Error {
   constructor(public readonly code: string) {
@@ -235,7 +236,13 @@ export async function declineBooking(
   const strings = BOOKING_STRINGS[language];
   let text = strings.declined(details(booking, language), input.reason);
   if (note) {
-    const translated = await translateText(llm, note, null, language);
+    const tracked = trackUsage(llm, {
+      db,
+      organizationId: booking.organizationId,
+      propertyId: booking.propertyId,
+      conversationId: booking.conversation?.id ?? null,
+    });
+    const translated = await translateText(tracked, note, null, language);
     text += `\n\n${strings.staffNote}: ${translated?.text ?? note}`;
   }
   await notifyGuest(db, booking, text, now);

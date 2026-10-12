@@ -4,14 +4,21 @@ import { env } from "@/server/env";
 import { getLlmClient } from "@/server/agent/llm";
 import { getNotifier, setNotifier } from "@/server/notifications";
 import { EmailNotifier } from "@/server/notifications/email";
+import { registerPusher } from "@/server/channels/registry";
+import { linePusher } from "./line";
 import type { ConversationDeps } from "./conversation";
 
-let notifierReady = false;
+let runtimeReady = false;
 
-/** Email notifications whenever an SMTP server is configured (Mailpit locally). */
-function ensureNotifier() {
-  if (notifierReady) return;
-  notifierReady = true;
+/**
+ * One-time wiring of process-wide integrations: email notifications whenever
+ * an SMTP server is configured (Mailpit locally) and push delivery for LINE.
+ * Call from any server entry point that may notify staff or message guests.
+ */
+export function ensureRuntime() {
+  if (runtimeReady) return;
+  runtimeReady = true;
+  registerPusher("LINE", linePusher(prisma, env.LINE_MODE));
   if (env.EMAIL_SERVER) {
     setNotifier(
       new EmailNotifier(prisma, {
@@ -25,7 +32,7 @@ function ensureNotifier() {
 
 /** Production wiring for the conversation service. */
 export function conversationDeps(): ConversationDeps {
-  ensureNotifier();
+  ensureRuntime();
   return {
     client: prisma,
     llm: getLlmClient(),

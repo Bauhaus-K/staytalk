@@ -34,7 +34,10 @@
     "properties": "등록된 숙소",
     "comingSoon": "이 화면은 다음 단계에서 구현됩니다.",
     "knowledgeCount": "지식 {count}개",
-    "roomTypeCount": "객실 타입 {count}개"
+    "roomTypeCount": "객실 타입 {count}개",
+    "waiting": "담당자 대기 {count}건",
+    "pendingBookings": "예약 대기 {count}건",
+    "unanswered": "답하지 못한 질문 {count}건"
   },
   "enums": {
     "category": {
@@ -187,7 +190,7 @@
   "settings": {
     "title": "설정",
     "widget": "웹 위젯",
-    "widgetDescription": "숙소 홈페이지의 </body> 바로 앞에 아래 코드를 붙여 넣으세요.",
+    "widgetDescription": "숙소 홈페이지의 '</body>' 바로 앞에 아래 코드를 붙여 넣으세요.",
     "publicKey": "공개 키",
     "allowedOrigins": "허용 도메인",
     "allowedOriginsHint": "위젯을 표시할 사이트 주소를 한 줄에 하나씩 입력하세요 (예: https://my-guesthouse.com). 목록에 없는 사이트에서는 위젯이 열리지 않습니다.",
@@ -195,7 +198,18 @@
     "saving": "저장 중…",
     "saved": "저장했습니다.",
     "invalidOrigin": "올바르지 않은 주소: {value}",
-    "preview": "미리보기 열기"
+    "preview": "미리보기 열기",
+    "line": "LINE 공식 계정",
+    "lineDescription": "LINE Developers 콘솔의 Messaging API 채널 정보를 입력하고, 아래 웹훅 URL을 등록하세요.",
+    "channelId": "채널 ID",
+    "channelSecret": "채널 시크릿",
+    "accessToken": "채널 액세스 토큰",
+    "keepHint": "비워 두면 저장된 값을 유지합니다.",
+    "lineActive": "LINE 응대 사용",
+    "webhookUrl": "웹훅 URL",
+    "credentialsRequired": "처음 등록할 때는 채널 시크릿과 액세스 토큰이 필요합니다.",
+    "ownerOnly": "설정은 사장(OWNER) 계정만 변경할 수 있습니다.",
+    "invalid": "입력값을 확인해 주세요."
   },
   "rooms": {
     "title": "객실·재고",
@@ -294,5 +308,46 @@
       "generic": "처리하지 못했습니다. 다시 시도해 주세요."
     },
     "cancel": "취소"
+  },
+  "metrics": {
+    "title": "지표",
+    "description": "테스트 대화를 제외한 실제 게스트 대화 기준입니다. 날짜는 숙소 현지 시간 기준입니다.",
+    "range": "최근 {days}일",
+    "conversations": "대화 수",
+    "automationRate": "자동 처리율",
+    "automationSub": "종료된 대화 {resolved}건 중 AI {ai}건",
+    "firstResponse": "평균 첫 응답 시간",
+    "firstResponseSub": "중앙값 {median} · {count}건",
+    "approvalRate": "예약 승인률",
+    "approvalSub": "처리 {decided}건 중 승인 {approved}건 · 대기 {pending}건",
+    "cost": "AI 비용 (추정)",
+    "costSub": "번역 포함",
+    "none": "-",
+    "daily": "일별 대화 수",
+    "table": "표로 보기",
+    "count": "대화 수",
+    "languages": "게스트 언어",
+    "reasons": "에스컬레이션 사유",
+    "bookingStatus": "예약 요청 결과",
+    "noData": "데이터가 없습니다.",
+    "openNow": "진행 중: AI 응대 {ai}건 · 담당자 대기 {escalated}건",
+    "minutes": "{value}분",
+    "hours": "{value}시간",
+    "usage": "이번 달 AI 사용량",
+    "usageLabel": "월 한도 대비 사용량",
+    "usageUnlimited": "월 한도 없음",
+    "usageWarning": "이번 달 사용량이 한도의 80%를 넘었습니다.",
+    "usageOver": "이번 달 한도를 초과해 새 문의는 담당자에게 넘어갑니다.",
+    "unknownLanguage": "미확인"
+  },
+  "unanswered": {
+    "title": "AI가 답하지 못한 질문",
+    "description": "지식에 추가하면 다음부터 AI가 답합니다.",
+    "empty": "모두 처리했습니다.",
+    "add": "지식에 추가",
+    "dismiss": "무시",
+    "original": "원문",
+    "conversation": "대화 보기",
+    "link": "답하지 못한 질문 {count}건"
   }
 }

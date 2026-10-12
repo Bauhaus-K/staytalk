@@ -66,7 +66,22 @@ export async function saveKnowledgeItem(
     });
     if (result.count === 0) return { error: "generic" };
   } else {
-    await db.knowledgeItem.create({ data: { ...input, organizationId: user.organizationId } });
+    const created = await db.knowledgeItem.create({
+      data: { ...input, organizationId: user.organizationId },
+    });
+    // Created from an unanswered question: link it so the question leaves the list.
+    const escalationId = formData.get("escalationId");
+    if (typeof escalationId === "string" && escalationId) {
+      await db.escalation.updateMany({
+        where: {
+          id: escalationId,
+          reason: "UNKNOWN_ANSWER",
+          conversation: { propertyId: property.id },
+        },
+        data: { addedKnowledgeItemId: created.id },
+      });
+      revalidatePath(`/${locale}/knowledge/unanswered`);
+    }
   }
 
   revalidatePath(`/${locale}/knowledge`);
@@ -81,4 +96,16 @@ export async function deleteKnowledgeItem(formData: FormData) {
   await db.knowledgeItem.deleteMany({ where: { id, propertyId } });
   revalidatePath(`/${locale}/knowledge`);
   redirect(`/${locale}/knowledge?property=${propertyId}`);
+}
+
+/** Removes an unanswered question from the list without adding knowledge. */
+export async function dismissUnansweredQuestion(formData: FormData) {
+  const locale = localeSchema.parse(formData.get("locale"));
+  const { db } = await requireTenant(locale);
+  const id = z.string().min(1).parse(formData.get("escalationId"));
+  await db.escalation.updateMany({
+    where: { id, reason: "UNKNOWN_ANSWER" },
+    data: { knowledgeDismissedAt: new Date() },
+  });
+  revalidatePath(`/${locale}/knowledge/unanswered`);
 }

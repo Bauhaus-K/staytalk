@@ -34,7 +34,10 @@
     "properties": "Properties",
     "comingSoon": "This screen will be built in an upcoming phase.",
     "knowledgeCount": "{count} knowledge items",
-    "roomTypeCount": "{count} room types"
+    "roomTypeCount": "{count} room types",
+    "waiting": "{count} waiting for staff",
+    "pendingBookings": "{count} pending bookings",
+    "unanswered": "{count} unanswered questions"
   },
   "enums": {
     "category": {
@@ -187,7 +190,7 @@
   "settings": {
     "title": "Settings",
     "widget": "Web widget",
-    "widgetDescription": "Paste this code right before </body> on your property's website.",
+    "widgetDescription": "Paste this code right before '</body>' on your property's website.",
     "publicKey": "Public key",
     "allowedOrigins": "Allowed sites",
     "allowedOriginsHint": "One site URL per line (e.g. https://my-guesthouse.com). The widget won't open on sites not listed here.",
@@ -195,7 +198,18 @@
     "saving": "Saving…",
     "saved": "Saved.",
     "invalidOrigin": "Invalid URL: {value}",
-    "preview": "Open preview"
+    "preview": "Open preview",
+    "line": "LINE official account",
+    "lineDescription": "Enter your Messaging API channel details from the LINE Developers console and register the webhook URL below.",
+    "channelId": "Channel ID",
+    "channelSecret": "Channel secret",
+    "accessToken": "Channel access token",
+    "keepHint": "Leave blank to keep the saved value.",
+    "lineActive": "Answer LINE messages",
+    "webhookUrl": "Webhook URL",
+    "credentialsRequired": "The channel secret and access token are required the first time.",
+    "ownerOnly": "Only owner accounts can change settings.",
+    "invalid": "Please check the values."
   },
   "rooms": {
     "title": "Rooms & inventory",
@@ -294,5 +308,46 @@
       "generic": "Something went wrong. Please try again."
     },
     "cancel": "Cancel"
+  },
+  "metrics": {
+    "title": "Metrics",
+    "description": "Real guest conversations only (test conversations excluded). Dates use the property's local time.",
+    "range": "Last {days} days",
+    "conversations": "Conversations",
+    "automationRate": "Automation rate",
+    "automationSub": "AI resolved {ai} of {resolved} closed",
+    "firstResponse": "Avg. first response",
+    "firstResponseSub": "median {median} · {count} escalations",
+    "approvalRate": "Booking approval rate",
+    "approvalSub": "{approved} of {decided} decided · {pending} pending",
+    "cost": "AI cost (est.)",
+    "costSub": "incl. translation",
+    "none": "-",
+    "daily": "Conversations per day",
+    "table": "Show as table",
+    "count": "Conversations",
+    "languages": "Guest languages",
+    "reasons": "Escalation reasons",
+    "bookingStatus": "Booking request outcomes",
+    "noData": "No data yet.",
+    "openNow": "Open now: {ai} with AI · {escalated} waiting for staff",
+    "minutes": "{value} min",
+    "hours": "{value} h",
+    "usage": "AI usage this month",
+    "usageLabel": "Usage vs monthly limit",
+    "usageUnlimited": "No monthly limit",
+    "usageWarning": "This month's usage passed 80% of the limit.",
+    "usageOver": "The monthly limit is reached; new questions go to staff.",
+    "unknownLanguage": "Unknown"
+  },
+  "unanswered": {
+    "title": "Questions the AI couldn't answer",
+    "description": "Add them to the knowledge base and the AI will answer next time.",
+    "empty": "All caught up.",
+    "add": "Add to knowledge",
+    "dismiss": "Dismiss",
+    "original": "Original",
+    "conversation": "Open conversation",
+    "link": "{count} unanswered questions"
   }
 }

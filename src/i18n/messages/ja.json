@@ -34,7 +34,10 @@
     "properties": "登録施設",
     "comingSoon": "この画面は次のフェーズで実装されます。",
     "knowledgeCount": "ナレッジ {count}件",
-    "roomTypeCount": "客室タイプ {count}件"
+    "roomTypeCount": "客室タイプ {count}件",
+    "waiting": "担当者対応待ち {count}件",
+    "pendingBookings": "予約対応待ち {count}件",
+    "unanswered": "未回答の質問 {count}件"
   },
   "enums": {
     "category": {
@@ -187,7 +190,7 @@
   "settings": {
     "title": "設定",
     "widget": "Webウィジェット",
-    "widgetDescription": "施設サイトの </body> の直前に以下のコードを貼り付けてください。",
+    "widgetDescription": "施設サイトの '</body>' の直前に以下のコードを貼り付けてください。",
     "publicKey": "公開キー",
     "allowedOrigins": "許可ドメイン",
     "allowedOriginsHint": "ウィジェットを表示するサイトのURLを1行に1つ入力してください（例：https://my-ryokan.jp）。一覧にないサイトではウィジェットは開きません。",
@@ -195,7 +198,18 @@
     "saving": "保存中…",
     "saved": "保存しました。",
     "invalidOrigin": "無効なURL：{value}",
-    "preview": "プレビューを開く"
+    "preview": "プレビューを開く",
+    "line": "LINE公式アカウント",
+    "lineDescription": "LINE DevelopersコンソールのMessaging APIチャネル情報を入力し、下記のWebhook URLを登録してください。",
+    "channelId": "チャネルID",
+    "channelSecret": "チャネルシークレット",
+    "accessToken": "チャネルアクセストークン",
+    "keepHint": "空欄の場合は保存済みの値を維持します。",
+    "lineActive": "LINEでの対応を有効にする",
+    "webhookUrl": "Webhook URL",
+    "credentialsRequired": "初回登録時はチャネルシークレットとアクセストークンが必要です。",
+    "ownerOnly": "設定はオーナーアカウントのみ変更できます。",
+    "invalid": "入力内容をご確認ください。"
   },
   "rooms": {
     "title": "客室・在庫",
@@ -294,5 +308,46 @@
       "generic": "処理できませんでした。もう一度お試しください。"
     },
     "cancel": "キャンセル"
+  },
+  "metrics": {
+    "title": "指標",
+    "description": "テスト会話を除いた実際のゲスト会話が対象です。日付は施設の現地時間です。",
+    "range": "直近{days}日",
+    "conversations": "会話数",
+    "automationRate": "自動対応率",
+    "automationSub": "終了した会話{resolved}件中、AI {ai}件",
+    "firstResponse": "平均初回応答時間",
+    "firstResponseSub": "中央値 {median}・{count}件",
+    "approvalRate": "予約承認率",
+    "approvalSub": "対応{decided}件中、承認{approved}件・対応待ち{pending}件",
+    "cost": "AIコスト（推定）",
+    "costSub": "翻訳を含む",
+    "none": "-",
+    "daily": "日別会話数",
+    "table": "表で表示",
+    "count": "会話数",
+    "languages": "ゲストの言語",
+    "reasons": "エスカレーション理由",
+    "bookingStatus": "予約リクエストの結果",
+    "noData": "データがありません。",
+    "openNow": "対応中：AI対応{ai}件・担当者対応待ち{escalated}件",
+    "minutes": "{value}分",
+    "hours": "{value}時間",
+    "usage": "今月のAI使用量",
+    "usageLabel": "月間上限に対する使用量",
+    "usageUnlimited": "月間上限なし",
+    "usageWarning": "今月の使用量が上限の80%を超えました。",
+    "usageOver": "今月の上限を超えたため、新しいお問い合わせは担当者に引き継がれます。",
+    "unknownLanguage": "不明"
+  },
+  "unanswered": {
+    "title": "AIが回答できなかった質問",
+    "description": "ナレッジに追加すると、次回からAIが回答します。",
+    "empty": "すべて対応済みです。",
+    "add": "ナレッジに追加",
+    "dismiss": "無視",
+    "original": "原文",
+    "conversation": "会話を見る",
+    "link": "回答できなかった質問 {count}件"
   }
 }

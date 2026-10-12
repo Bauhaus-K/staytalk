@@ -35,3 +35,34 @@ export function todayIn(timeZone: string, now = new Date()): Date {
   }).format(now);
   return parseIsoDate(iso)!;
 }
+
+/**
+ * The instant at which a calendar date (UTC-midnight convention) begins in a
+ * time zone, e.g. 2026-10-12 in Asia/Seoul → 2026-10-11T15:00:00Z.
+ */
+export function localMidnightUtc(date: Date, timeZone: string): Date {
+  const guess = date.getTime();
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+      .formatToParts(new Date(guess))
+      .map((p) => [p.type, p.value]),
+  );
+  const asUtc = Date.UTC(
+    +parts.year!,
+    +parts.month! - 1,
+    +parts.day!,
+    +parts.hour!,
+    +parts.minute!,
+    +parts.second!,
+  );
+  return new Date(guess - (asUtc - guess));
+}
