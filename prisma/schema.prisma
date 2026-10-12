@@ -1,0 +1,543 @@
+// StayTalk data model.
+// Tenant rule: every tenant-owned model carries `organizationId` (denormalized on
+// purpose) so the tenant-scoped client (src/server/db/tenant.ts) can enforce
+// isolation with a single filter. Required parent relations use compound
+// foreign keys (id, organizationId) so the database itself rejects
+// cross-tenant references. Language codes are BCP-47-ish strings
+// validated in app code: ko | ja | en | zh-CN | zh-TW.
+// Money is stored as integer amounts in the property's currency (KRW/JPY have
+// no minor units).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  OWNER
+  STAFF
+}
+
+enum Country {
+  KR
+  JP
+}
+
+enum PricingModel {
+  PER_ROOM
+  PER_PERSON
+}
+
+enum OverLimitAction {
+  ESCALATE
+}
+
+enum KnowledgeCategory {
+  HOUSE_RULES
+  CHECKIN
+  FACILITY
+  TRANSPORT
+  NEARBY
+  FAQ
+  POLICY
+}
+
+enum Channel {
+  WEB_WIDGET
+  LINE
+  KAKAO
+  EMAIL
+}
+
+enum ConversationStatus {
+  AI_HANDLING
+  ESCALATED
+  RESOLVED
+}
+
+enum ResolvedBy {
+  AI
+  HUMAN
+}
+
+enum MessageRole {
+  GUEST
+  AI
+  STAFF
+  SYSTEM
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  EXPIRED
+}
+
+enum EscalationReason {
+  UNKNOWN_ANSWER
+  COMPLAINT
+  REFUND
+  EMERGENCY
+  GUEST_REQUESTED_HUMAN
+  BOOKING_CHANGE
+  USAGE_LIMIT
+}
+
+enum UsageKind {
+  AGENT
+  TRANSLATION
+  LANGUAGE_DETECTION
+}
+
+enum EscalationStatus {
+  OPEN
+  RESOLVED
+}
+
+// ---------------------------------------------------------------------------
+// Tenancy & auth
+// ---------------------------------------------------------------------------
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users              User[]
+  properties         Property[]
+  roomTypes          RoomType[]
+  availabilities     Availability[]
+  knowledgeItems     KnowledgeItem[]
+  conversations      Conversation[]
+  messages           Message[]
+  bookingRequests    BookingRequest[]
+  escalations        Escalation[]
+  agentRuns          AgentRun[]
+  toolCalls          ToolCall[]
+  llmUsages          LlmUsage[]
+  channelConnections ChannelConnection[]
+}
+
+model User {
+  id             String    @id @default(cuid())
+  organizationId String
+  email          String    @unique
+  name           String?
+  passwordHash   String?
+  role           Role      @default(STAFF)
+  // Dashboard UI locale: ko | ja | en
+  locale         String    @default("ko")
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accounts     Account[]
+  sessions     Session[]
+
+  staffMessages       Message[]        @relation("MessageAuthor")
+  decidedBookings     BookingRequest[] @relation("BookingDecider")
+  resolvedEscalations Escalation[]     @relation("EscalationResolver")
+
+  @@index([organizationId])
+}
+
+// Auth.js adapter models (field names follow @auth/prisma-adapter).
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Property & inventory
+// ---------------------------------------------------------------------------
+
+model Property {
+  id                     String          @id @default(cuid())
+  organizationId         String
+  name                   String
+  country                Country
+  address                String
+  timezone               String
+  // Language the property primarily communicates in.
+  defaultLanguage        String
+  // Language staff read guest messages in (translation target).
+  staffLanguage          String
+  currency               String
+  checkInTime            String          @default("15:00")
+  checkOutTime           String          @default("11:00")
+  phone                  String?
+  // Public key embedded in the widget snippet. Not a secret; restricted by allowedOrigins.
+  widgetPublicKey        String          @unique
+  allowedOrigins         String[]        @default([])
+  // Monthly LLM token budget; null = unlimited.
+  monthlyTokenLimit      Int?
+  overLimitAction        OverLimitAction @default(ESCALATE)
+  bookingRequestTtlHours Int             @default(24)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  roomTypes          RoomType[]
+  knowledgeItems     KnowledgeItem[]
+  conversations      Conversation[]
+  bookingRequests    BookingRequest[]
+  llmUsages          LlmUsage[]
+  channelConnections ChannelConnection[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId])
+}
+
+model RoomType {
+  id             String       @id @default(cuid())
+  organizationId String
+  propertyId     String
+  // Localized names/descriptions: { "ko": "...", "ja": "...", "en": "..." }
+  name           Json
+  description    Json?
+  capacity       Int
+  pricingModel   PricingModel @default(PER_ROOM)
+  // Nightly rate per room (PER_ROOM) or per person (PER_PERSON).
+  baseRate       Int
+  totalRooms     Int
+  sortOrder      Int          @default(0)
+  active         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property        Property         @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  availabilities  Availability[]
+  bookingRequests BookingRequest[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId])
+  @@index([propertyId])
+}
+
+// Per-date override of inventory/rate. Missing row = use RoomType defaults.
+model Availability {
+  id             String   @id @default(cuid())
+  organizationId String
+  roomTypeId     String
+  date           DateTime @db.Date
+  availableCount Int?
+  rate           Int?
+  closed         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  roomType     RoomType     @relation(fields: [roomTypeId, organizationId], references: [id, organizationId], onDelete: Cascade)
+
+  @@unique([roomTypeId, date])
+  @@index([organizationId])
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge
+// ---------------------------------------------------------------------------
+
+model KnowledgeItem {
+  id             String                       @id @default(cuid())
+  organizationId String
+  propertyId     String
+  category       KnowledgeCategory
+  // Short title / representative question.
+  question       String
+  content        String                       @db.Text
+  // Language the item was written in.
+  language       String
+  active         Boolean                      @default(true)
+  // Optional semantic search (pgvector). Written via raw SQL; `embeddingModel`
+  // names the model that produced it (null = missing or stale).
+  embedding      Unsupported("vector(1024)")?
+  embeddingModel String?
+  createdAt      DateTime                     @default(now())
+  updatedAt      DateTime                     @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property     @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  escalations  Escalation[]
+
+  @@index([organizationId])
+  @@index([propertyId, category])
+  // Trigram indexes for search_knowledge (pg_trgm, created in the init migration).
+  @@index([question(ops: raw("gin_trgm_ops"))], type: Gin, map: "KnowledgeItem_question_trgm_idx")
+  @@index([content(ops: raw("gin_trgm_ops"))], type: Gin, map: "KnowledgeItem_content_trgm_idx")
+}
+
+// ---------------------------------------------------------------------------
+// Conversations
+// ---------------------------------------------------------------------------
+
+model Conversation {
+  id                   String             @id @default(cuid())
+  organizationId       String
+  propertyId           String
+  channel              Channel
+  // Anonymous widget session id (stored in the guest's browser).
+  guestSessionId       String?
+  // Channel-native user id (e.g. LINE userId). Pseudonymous; masked by retention job.
+  externalUserId       String?
+  guestLanguage        String?
+  status               ConversationStatus @default(AI_HANDLING)
+  resolvedBy           ResolvedBy?
+  resolvedAt           DateTime?
+  // "Staff will reply soon" notice is sent once per escalation.
+  escalationNoticeSent Boolean            @default(false)
+  lastMessageAt        DateTime           @default(now())
+  // Set by the 90-day retention job once messages are masked.
+  maskedAt             DateTime?
+  // Dashboard playground / eval conversations: excluded from metrics.
+  isTest               Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property        Property         @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  messages        Message[]
+  escalations     Escalation[]
+  bookingRequests BookingRequest[]
+  agentRuns       AgentRun[]
+  llmUsages       LlmUsage[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, status, lastMessageAt])
+  @@index([propertyId, channel, guestSessionId])
+  @@index([propertyId, channel, externalUserId])
+}
+
+model Message {
+  id                 String      @id @default(cuid())
+  organizationId     String
+  conversationId     String
+  role               MessageRole
+  // Original text as sent/received (after PII masking).
+  content            String      @db.Text
+  language           String?
+  // Translation for the other side: staff language for GUEST/AI, guest language for STAFF.
+  translatedContent  String?     @db.Text
+  translatedLanguage String?
+  piiMasked          Boolean     @default(false)
+  authorUserId       String?
+  createdAt          DateTime    @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  author       User?        @relation("MessageAuthor", fields: [authorUserId], references: [id], onDelete: SetNull)
+  agentRuns    AgentRun[]
+
+  @@index([organizationId])
+  @@index([conversationId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Bookings & escalations
+// ---------------------------------------------------------------------------
+
+model BookingRequest {
+  id             String        @id @default(cuid())
+  organizationId String
+  propertyId     String
+  conversationId String?
+  roomTypeId     String
+  checkIn        DateTime      @db.Date
+  checkOut       DateTime      @db.Date
+  guests         Int
+  // Guest PII lives only here (never in Conversation).
+  guestName      String
+  guestContact   String
+  guestLanguage  String
+  quotedTotal    Int?
+  currency       String
+  note           String?       @db.Text
+  status         BookingStatus @default(PENDING)
+  expiresAt      DateTime
+  // Template code (FULLY_BOOKED | DATES_UNAVAILABLE | GROUP_SIZE | OTHER) + optional staff note.
+  declineReason  String?
+  declineNote    String?       @db.Text
+  decidedById    String?
+  decidedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property      @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  roomType     RoomType      @relation(fields: [roomTypeId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  decidedBy    User?         @relation("BookingDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, status])
+  @@index([status, expiresAt])
+}
+
+model Escalation {
+  id                   String           @id @default(cuid())
+  organizationId       String
+  conversationId       String
+  reason               EscalationReason
+  summary              String           @db.Text
+  // Guest question that triggered it (feeds "unanswered questions" list).
+  question             String?          @db.Text
+  status               EscalationStatus @default(OPEN)
+  firstResponseAt      DateTime?
+  resolvedAt           DateTime?
+  resolvedById         String?
+  addedKnowledgeItemId String?
+  // Staff chose not to turn this unanswered question into knowledge.
+  knowledgeDismissedAt DateTime?
+  createdAt            DateTime         @default(now())
+
+  organization       Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  conversation       Conversation   @relation(fields: [conversationId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  resolvedBy         User?          @relation("EscalationResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  addedKnowledgeItem KnowledgeItem? @relation(fields: [addedKnowledgeItemId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, status])
+  @@index([organizationId, reason])
+}
+
+// ---------------------------------------------------------------------------
+// Observability & usage
+// ---------------------------------------------------------------------------
+
+model AgentRun {
+  id                String   @id @default(cuid())
+  organizationId    String
+  conversationId    String
+  triggerMessageId  String?
+  // "mock" | "live"
+  mode              String
+  model             String
+  inputTokens       Int      @default(0)
+  outputTokens      Int      @default(0)
+  cacheReadTokens   Int      @default(0)
+  cacheWriteTokens  Int      @default(0)
+  latencyMs         Int      @default(0)
+  stopReason        String?
+  error             String?
+  // Knowledge items the model said it relied on (parsed from its answer).
+  citedKnowledgeIds String[] @default([])
+  // Final outcome: "replied" | "escalated" | "error"
+  outcome           String?
+  createdAt         DateTime @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  triggerMessage Message?     @relation(fields: [triggerMessageId], references: [id], onDelete: SetNull)
+  toolCalls      ToolCall[]
+
+  @@unique([id, organizationId])
+  @@index([organizationId, createdAt])
+  @@index([conversationId])
+}
+
+model ToolCall {
+  id             String   @id @default(cuid())
+  organizationId String
+  agentRunId     String
+  sequence       Int
+  name           String
+  input          Json
+  output         Json?
+  isError        Boolean  @default(false)
+  durationMs     Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  agentRun     AgentRun     @relation(fields: [agentRunId, organizationId], references: [id, organizationId], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([agentRunId, sequence])
+}
+
+// One row per LLM call (main and fast model). Source of truth for usage
+// limits and cost estimates; AgentRun keeps per-run totals for tracing.
+model LlmUsage {
+  id               String    @id @default(cuid())
+  organizationId   String
+  propertyId       String
+  conversationId   String?
+  kind             UsageKind
+  model            String
+  inputTokens      Int       @default(0)
+  outputTokens     Int       @default(0)
+  cacheReadTokens  Int       @default(0)
+  cacheWriteTokens Int       @default(0)
+  // Estimated cost in millionths of a USD (from the price table in code).
+  costMicroUsd     Int       @default(0)
+  createdAt        DateTime  @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property      @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, propertyId, createdAt])
+  @@index([conversationId])
+}
+
+// Messaging channel credentials per property (LINE now; Kakao later).
+// Secrets are encrypted at rest (src/server/security/secrets.ts).
+model ChannelConnection {
+  id                   String   @id @default(cuid())
+  organizationId       String
+  propertyId           String
+  channel              Channel
+  // LINE: the bot's channel id (shown to staff for reference).
+  externalId           String?
+  secretEncrypted      String
+  accessTokenEncrypted String
+  active               Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  property     Property     @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)
+
+  @@unique([propertyId, channel])
+  @@index([organizationId])
+}

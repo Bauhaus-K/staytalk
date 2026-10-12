@@ -1,0 +1,481 @@
+{
+  "common": {
+    "appName": "StayTalk",
+    "tagline": "小規模宿泊施設のための多言語AI接客・予約エージェント",
+    "language": "言語",
+    "signOut": "ログアウト"
+  },
+  "login": {
+    "title": "ログイン",
+    "description": "施設管理者アカウントでログインしてください。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "submit": "ログイン",
+    "submitting": "ログイン中…",
+    "or": "または",
+    "magicLink": "メールでログインリンクを受け取る",
+    "magicLinkSent": "ログインリンクをメールで送信しました。受信トレイをご確認ください。",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+    "genericError": "ログイン中にエラーが発生しました。もう一度お試しください。"
+  },
+  "nav": {
+    "home": "ホーム",
+    "inbox": "受信箱",
+    "bookings": "予約リクエスト",
+    "knowledge": "ナレッジベース",
+    "rooms": "客室・在庫",
+    "metrics": "指標",
+    "playground": "チャットテスト",
+    "settings": "設定",
+    "onboarding": "施設設定"
+  },
+  "dashboard": {
+    "welcome": "{name}さん、ようこそ",
+    "organization": "事業者: {name}",
+    "properties": "登録施設",
+    "comingSoon": "この画面は次のフェーズで実装されます。",
+    "knowledgeCount": "ナレッジ {count}件",
+    "roomTypeCount": "客室タイプ {count}件",
+    "waiting": "担当者対応待ち {count}件",
+    "pendingBookings": "予約対応待ち {count}件",
+    "unanswered": "未回答の質問 {count}件"
+  },
+  "enums": {
+    "category": {
+      "HOUSE_RULES": "ハウスルール",
+      "CHECKIN": "チェックイン",
+      "FACILITY": "設備",
+      "TRANSPORT": "交通",
+      "NEARBY": "周辺情報",
+      "FAQ": "FAQ",
+      "POLICY": "ポリシー"
+    },
+    "language": {
+      "ko": "韓国語",
+      "ja": "日本語",
+      "en": "英語",
+      "zh-CN": "中国語（簡体）",
+      "zh-TW": "中国語（繁体）"
+    },
+    "conversationStatus": {
+      "AI_HANDLING": "AI対応中",
+      "ESCALATED": "担当者対応待ち",
+      "RESOLVED": "解決済み"
+    },
+    "escalationReason": {
+      "UNKNOWN_ANSWER": "回答不可",
+      "COMPLAINT": "苦情",
+      "REFUND": "返金",
+      "EMERGENCY": "緊急",
+      "GUEST_REQUESTED_HUMAN": "担当者希望",
+      "BOOKING_CHANGE": "予約関連",
+      "USAGE_LIMIT": "利用上限"
+    },
+    "messageRole": {
+      "GUEST": "ゲスト",
+      "AI": "AI",
+      "STAFF": "スタッフ",
+      "SYSTEM": "自動案内"
+    }
+  },
+  "property": {
+    "label": "施設",
+    "none": "登録された施設がありません。"
+  },
+  "knowledge": {
+    "title": "ナレッジベース",
+    "description": "AIはここに登録された情報のみを事実として案内します。記載のない内容は担当者に引き継ぎます。",
+    "newItem": "新規項目",
+    "editItem": "項目を編集",
+    "allCategories": "すべて",
+    "searchPlaceholder": "タイトル・内容を検索",
+    "search": "検索",
+    "category": "カテゴリ",
+    "language": "記載言語",
+    "question": "タイトル（代表的な質問）",
+    "questionHint": "例：チェックインは何時からですか？",
+    "content": "内容",
+    "contentHint": "ゲストに案内する事実を具体的に記入してください。時間・料金・場所は正確に。",
+    "active": "AI回答に使用",
+    "inactive": "使用しない",
+    "save": "保存",
+    "saving": "保存中…",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "deleteConfirm": "この項目を削除しますか？元に戻せません。",
+    "edit": "編集",
+    "empty": "条件に合う項目がありません。",
+    "count": "{count}件",
+    "errors": {
+      "required": "必須項目です。",
+      "tooLong": "長すぎます。",
+      "generic": "保存できませんでした。もう一度お試しください。"
+    }
+  },
+  "playground": {
+    "title": "チャットテスト",
+    "description": "ゲストの立場でAIの回答を試せます。ここで作成した会話は指標から除外されます。",
+    "placeholder": "ゲストとして質問を入力してください（한국어・日本語・English・中文）",
+    "send": "送信",
+    "sending": "回答を生成中…",
+    "reset": "新しい会話",
+    "empty": "まだ会話がありません。質問を送ってみてください。",
+    "status": "ステータス",
+    "showTranslation": "スタッフ用翻訳を表示",
+    "trace": "AI処理の詳細",
+    "toolCalls": "ツール呼び出し",
+    "noToolCalls": "ツール呼び出しなし",
+    "model": "モデル",
+    "tokens": "トークン（入力 {input} / 出力 {output} / キャッシュ読込 {cacheRead}）",
+    "latency": "{ms}ms",
+    "cited": "根拠ナレッジ",
+    "noCited": "根拠ナレッジなし",
+    "outcome": "結果",
+    "error": "エラー",
+    "escalation": "エスカレーション",
+    "mockNotice": "AI_MODE=mock：ルールベースの模擬AIで動作中です。実際のClaudeの回答ではありません。",
+    "sendError": "メッセージを送信できませんでした。"
+  },
+  "email": {
+    "subject": "[StayTalk] {property}: {reason}",
+    "emergencySubject": "[緊急] {property}: ゲストの緊急事態",
+    "intro": "{property}のゲストとの会話が担当者に引き継がれました。",
+    "reason": "理由",
+    "summary": "概要",
+    "question": "ゲストのメッセージ",
+    "open": "会話を開く",
+    "footer": "このメールはStayTalkから自動送信されています。",
+    "bookingSubject": "[StayTalk] {property}: 新しい予約リクエスト {reference}",
+    "bookingIntro": "{property}に新しい予約リクエストが届きました。内容を確認し、承認または辞退してください。",
+    "room": "客室",
+    "dates": "日程",
+    "guests": "人数",
+    "openBookings": "予約リクエストを開く"
+  },
+  "inbox": {
+    "title": "受信箱",
+    "description": "ゲストとの会話を確認し、必要に応じて直接返信できます。返信はゲストの言語に自動翻訳されます。",
+    "all": "すべて",
+    "showTest": "テスト会話を含める",
+    "empty": "会話がありません。",
+    "noMessages": "（メッセージなし）",
+    "open": "開く",
+    "back": "受信箱へ",
+    "channel": {
+      "WEB_WIDGET": "Webウィジェット",
+      "LINE": "LINE",
+      "KAKAO": "カカオ",
+      "EMAIL": "メール"
+    },
+    "guestLanguage": "ゲストの言語",
+    "escalations": "エスカレーション",
+    "escalationOpen": "対応待ち",
+    "escalationResolved": "対応済み",
+    "summary": "概要",
+    "question": "ゲストの質問",
+    "reply": "直接返信",
+    "replyHint": "{language}で入力すると、ゲストの言語に翻訳して送信します。原文も保存されます。",
+    "send": "送信",
+    "sending": "送信中…",
+    "resolve": "解決済みにする",
+    "returnToAi": "AIに戻す",
+    "aiPaused": "担当者が対応中のため、AIは返信しません。",
+    "hideTranslation": "翻訳を隠す",
+    "showTranslation": "翻訳を表示",
+    "errors": {
+      "generic": "処理できませんでした。もう一度お試しください。"
+    },
+    "lastActivity": "最終更新",
+    "property": "施設"
+  },
+  "settings": {
+    "title": "設定",
+    "widget": "Webウィジェット",
+    "widgetDescription": "施設サイトの '</body>' の直前に以下のコードを貼り付けてください。",
+    "publicKey": "公開キー",
+    "allowedOrigins": "許可ドメイン",
+    "allowedOriginsHint": "ウィジェットを表示するサイトのURLを1行に1つ入力してください（例：https://my-ryokan.jp）。一覧にないサイトではウィジェットは開きません。",
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "保存しました。",
+    "invalidOrigin": "無効なURL：{value}",
+    "preview": "プレビューを開く",
+    "line": "LINE公式アカウント",
+    "lineDescription": "LINE DevelopersコンソールのMessaging APIチャネル情報を入力し、下記のWebhook URLを登録してください。",
+    "channelId": "チャネルID",
+    "channelSecret": "チャネルシークレット",
+    "accessToken": "チャネルアクセストークン",
+    "keepHint": "空欄の場合は保存済みの値を維持します。",
+    "lineActive": "LINEでの対応を有効にする",
+    "webhookUrl": "Webhook URL",
+    "credentialsRequired": "初回登録時はチャネルシークレットとアクセストークンが必要です。",
+    "ownerOnly": "設定はオーナーアカウントのみ変更できます。",
+    "invalid": "入力内容をご確認ください。"
+  },
+  "rooms": {
+    "title": "客室・在庫",
+    "description": "客室タイプと日別の在庫・料金を管理します。設定のない日は既定値（保有室数・基本料金）が適用されます。",
+    "roomTypes": "客室タイプ",
+    "newRoomType": "新しい客室タイプ",
+    "editRoomType": "客室タイプを編集",
+    "nameKo": "名称（韓国語）",
+    "nameJa": "名称（日本語）",
+    "nameEn": "名称（英語）",
+    "capacity": "定員",
+    "pricingModel": "料金基準",
+    "PER_ROOM": "1室1泊",
+    "PER_PERSON": "1名1泊",
+    "baseRate": "基本料金（{currency}）",
+    "totalRooms": "保有室数",
+    "active": "販売中",
+    "inactive": "販売停止",
+    "save": "保存",
+    "saving": "保存中…",
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "nameRequired": "名称を1つ以上入力してください。",
+    "invalid": "入力内容をご確認ください。",
+    "calendar": "在庫カレンダー",
+    "prev": "前の2週間",
+    "next": "次の2週間",
+    "closed": "販売停止",
+    "override": "個別設定",
+    "rooms": "{count}室",
+    "editDay": "日別設定",
+    "date": "日付",
+    "roomType": "客室タイプ",
+    "available": "販売室数",
+    "rate": "料金",
+    "defaultHint": "空欄で既定値",
+    "closeDay": "この日を販売停止",
+    "apply": "適用",
+    "clear": "個別設定を削除",
+    "csv": "CSVアップロード",
+    "csvHint": "列：date,room_type,available,rate,closed — room_typeは客室タイプ名またはID。空欄は既定値です。",
+    "csvFile": "CSVファイル",
+    "preview": "プレビュー",
+    "applyCsv": "{count}件を適用",
+    "csvOk": "{count}行を検証しました",
+    "csvErrors": "エラー{count}件 — 修正して再度アップロードしてください。",
+    "csvApplied": "適用しました：保存{upserted}件、削除{cleared}件",
+    "line": "{line}行目",
+    "csvErrorCodes": {
+      "missing_header": "ヘッダー行（date,room_type,…）が必要です",
+      "too_many_rows": "行数が多すぎます（最大2000）",
+      "unknown_room_type": "不明な客室タイプ",
+      "invalid_date": "日付形式エラー（YYYY-MM-DD）",
+      "invalid_available": "室数は0以上の整数",
+      "available_exceeds_total": "保有室数を超えています",
+      "invalid_rate": "料金は0以上の整数",
+      "invalid_closed": "closedはyes/noまたは1/0"
+    }
+  },
+  "bookings": {
+    "title": "予約リクエスト",
+    "description": "AIが受け付けた予約リクエストです。承認するとゲストに確定のご案内が自動送信されます。",
+    "empty": "予約リクエストはありません。",
+    "status": {
+      "PENDING": "対応待ち",
+      "APPROVED": "承認",
+      "DECLINED": "辞退",
+      "EXPIRED": "期限切れ"
+    },
+    "reference": "予約番号 {ref}",
+    "nights": "{count}泊",
+    "guests": "{count}名",
+    "total": "概算料金",
+    "guest": "ゲスト",
+    "contact": "連絡先",
+    "language": "言語",
+    "expires": "期限",
+    "created": "受付",
+    "decided": "対応",
+    "note": "ご要望",
+    "approve": "承認",
+    "decline": "辞退",
+    "declineReason": "辞退理由",
+    "declineNote": "ゲストへのメッセージ（任意・自動翻訳）",
+    "confirmDecline": "辞退する",
+    "conversation": "会話を見る",
+    "reasons": {
+      "FULLY_BOOKED": "満室",
+      "DATES_UNAVAILABLE": "日程受付不可",
+      "GROUP_SIZE": "人数超過",
+      "OTHER": "その他"
+    },
+    "errors": {
+      "no_availability": "在庫が不足しているため承認できません。在庫を確認するか、辞退してください。",
+      "not_pending": "すでに対応済みのリクエストです。",
+      "generic": "処理できませんでした。もう一度お試しください。"
+    },
+    "cancel": "キャンセル"
+  },
+  "metrics": {
+    "title": "指標",
+    "description": "テスト会話を除いた実際のゲスト会話が対象です。日付は施設の現地時間です。",
+    "range": "直近{days}日",
+    "conversations": "会話数",
+    "automationRate": "自動対応率",
+    "automationSub": "終了した会話{resolved}件中、AI {ai}件",
+    "firstResponse": "平均初回応答時間",
+    "firstResponseSub": "中央値 {median}・{count}件",
+    "approvalRate": "予約承認率",
+    "approvalSub": "対応{decided}件中、承認{approved}件・対応待ち{pending}件",
+    "cost": "AIコスト（推定）",
+    "costSub": "翻訳を含む",
+    "none": "-",
+    "daily": "日別会話数",
+    "table": "表で表示",
+    "count": "会話数",
+    "languages": "ゲストの言語",
+    "reasons": "エスカレーション理由",
+    "bookingStatus": "予約リクエストの結果",
+    "noData": "データがありません。",
+    "openNow": "対応中：AI対応{ai}件・担当者対応待ち{escalated}件",
+    "minutes": "{value}分",
+    "hours": "{value}時間",
+    "usage": "今月のAI使用量",
+    "usageLabel": "月間上限に対する使用量",
+    "usageUnlimited": "月間上限なし",
+    "usageWarning": "今月の使用量が上限の80%を超えました。",
+    "usageOver": "今月の上限を超えたため、新しいお問い合わせは担当者に引き継がれます。",
+    "unknownLanguage": "不明"
+  },
+  "unanswered": {
+    "title": "AIが回答できなかった質問",
+    "description": "ナレッジに追加すると、次回からAIが回答します。",
+    "empty": "すべて対応済みです。",
+    "add": "ナレッジに追加",
+    "dismiss": "無視",
+    "original": "原文",
+    "conversation": "会話を見る",
+    "link": "回答できなかった質問 {count}件"
+  },
+  "legal": {
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "draft": "仮のページです。法務確認を経た正式な文面に差し替える必要があります。",
+    "updated": "最終更新日：未定",
+    "todo": "TODO：作成予定",
+    "termsSections": {
+      "service": "サービス内容",
+      "account": "アカウントと責任",
+      "ai": "AI回答の限界",
+      "fees": "料金と解約",
+      "liability": "責任の制限",
+      "law": "準拠法と管轄"
+    },
+    "privacySections": {
+      "collected": "取得する情報",
+      "purpose": "利用目的",
+      "retention": "保存期間と廃棄",
+      "thirdParties": "委託および国外移転",
+      "rights": "本人の権利",
+      "contact": "お問い合わせ先"
+    },
+    "retentionNote": "ゲストとの会話記録は、最後のやり取りから90日経過後にマスキングされます。",
+    "home": "StayTalk ホーム"
+  },
+  "onboarding": {
+    "title": "施設設定ウィザード",
+    "description": "4つのステップでAI対応の準備をします。",
+    "newProperty": "施設を追加",
+    "steps": {
+      "property": "施設情報",
+      "rooms": "客室タイプ",
+      "knowledge": "ナレッジ入力",
+      "widget": "ウィジェット設置"
+    },
+    "name": "施設名",
+    "country": "国",
+    "countries": {
+      "KR": "韓国",
+      "JP": "日本"
+    },
+    "address": "住所",
+    "timezone": "タイムゾーン",
+    "defaultLanguage": "ナレッジの記載言語",
+    "staffLanguage": "スタッフの言語（翻訳先）",
+    "currency": "通貨",
+    "checkInTime": "チェックイン時刻",
+    "checkOutTime": "チェックアウト時刻",
+    "phone": "電話番号（任意）",
+    "next": "次へ",
+    "back": "戻る",
+    "skip": "スキップ",
+    "finish": "完了",
+    "saving": "保存中…",
+    "ownerOnly": "施設情報はオーナーアカウントのみ変更できます。",
+    "invalid": "入力内容をご確認ください。",
+    "roomsHint": "ゲストに案内する客室タイプを追加してください。日別の在庫・料金は後で「客室・在庫」で設定します。",
+    "addRoom": "客室タイプを追加",
+    "roomName": "客室名",
+    "noRooms": "客室タイプはまだありません。",
+    "knowledgeHint": "よくある質問です。回答できる項目だけ入力してください。空欄の質問はスキップされます。AIはここに書かれた内容のみを事実として案内します。",
+    "saveKnowledge": "ナレッジを保存",
+    "knowledgeSaved": "{count}件を保存しました。",
+    "alreadyAdded": "登録済み",
+    "widgetHint": "以下のコードをサイトに貼り付け、ウィジェットを表示するサイトのURLを登録してください。",
+    "done": "設定が完了しました。チャットテストでAIの回答を確認してみてください。",
+    "openPlayground": "チャットテストを開く",
+    "continueSetup": "設定を完了する",
+    "templates": {
+      "checkin_time": {
+        "question": "チェックイン・チェックアウトの時間は？",
+        "hint": "例：チェックイン15:00〜22:00、チェックアウト11:00。アーリーチェックインの可否"
+      },
+      "self_checkin": {
+        "question": "遅く到着する場合のチェックイン方法は？",
+        "hint": "例：22時以降のセルフチェックイン、暗証番号の案内方法"
+      },
+      "luggage": {
+        "question": "荷物を預けられますか？",
+        "hint": "例：チェックイン前・チェックアウト後17時まで無料"
+      },
+      "wifi": {
+        "question": "Wi-Fiはありますか？",
+        "hint": "例：全館無料、パスワードは客室案内に記載"
+      },
+      "breakfast": {
+        "question": "朝食はありますか？",
+        "hint": "例：7:30〜9:00、お食事処にて"
+      },
+      "parking": {
+        "question": "駐車場はありますか？",
+        "hint": "例：2台分、1泊1,000円、要予約"
+      },
+      "amenities": {
+        "question": "タオルやアメニティはありますか？",
+        "hint": "例：浴衣、タオル、歯ブラシ等をご用意"
+      },
+      "smoking": {
+        "question": "喫煙はできますか？",
+        "hint": "例：館内禁煙、喫煙所の場所"
+      },
+      "quiet": {
+        "question": "静かにすべき時間はありますか？",
+        "hint": "例：22時以降はお静かに、門限23時"
+      },
+      "pets": {
+        "question": "ペットは同伴できますか？",
+        "hint": "例：不可（補助犬を除く）"
+      },
+      "airport": {
+        "question": "空港からの行き方は？",
+        "hint": "例：地下鉄で博多駅まで5分、徒歩12分"
+      },
+      "nearby_food": {
+        "question": "近くのおすすめの飲食店は？",
+        "hint": "例：徒歩5分の屋台街"
+      },
+      "cancellation": {
+        "question": "キャンセルポリシーは？",
+        "hint": "例：7日前〜3日前20%、前日50%、当日100%"
+      },
+      "payment": {
+        "question": "支払い方法は？",
+        "hint": "例：現金、クレジットカード、交通系IC"
+      }
+    }
+  }
+}

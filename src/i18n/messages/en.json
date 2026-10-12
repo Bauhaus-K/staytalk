@@ -1,0 +1,481 @@
+{
+  "common": {
+    "appName": "StayTalk",
+    "tagline": "Multilingual AI concierge & booking agent for small stays",
+    "language": "Language",
+    "signOut": "Sign out"
+  },
+  "login": {
+    "title": "Sign in",
+    "description": "Sign in with your property manager account.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "or": "or",
+    "magicLink": "Email me a sign-in link",
+    "magicLinkSent": "We sent a sign-in link to your email. Please check your inbox.",
+    "invalidCredentials": "Incorrect email or password.",
+    "genericError": "Something went wrong while signing in. Please try again."
+  },
+  "nav": {
+    "home": "Home",
+    "inbox": "Inbox",
+    "bookings": "Booking requests",
+    "knowledge": "Knowledge base",
+    "rooms": "Rooms & inventory",
+    "metrics": "Metrics",
+    "playground": "Chat playground",
+    "settings": "Settings",
+    "onboarding": "Setup"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {name}",
+    "organization": "Organization: {name}",
+    "properties": "Properties",
+    "comingSoon": "This screen will be built in an upcoming phase.",
+    "knowledgeCount": "{count} knowledge items",
+    "roomTypeCount": "{count} room types",
+    "waiting": "{count} waiting for staff",
+    "pendingBookings": "{count} pending bookings",
+    "unanswered": "{count} unanswered questions"
+  },
+  "enums": {
+    "category": {
+      "HOUSE_RULES": "House rules",
+      "CHECKIN": "Check-in",
+      "FACILITY": "Facilities",
+      "TRANSPORT": "Transport",
+      "NEARBY": "Nearby",
+      "FAQ": "FAQ",
+      "POLICY": "Policies"
+    },
+    "language": {
+      "ko": "Korean",
+      "ja": "Japanese",
+      "en": "English",
+      "zh-CN": "Chinese (Simplified)",
+      "zh-TW": "Chinese (Traditional)"
+    },
+    "conversationStatus": {
+      "AI_HANDLING": "AI handling",
+      "ESCALATED": "Waiting for staff",
+      "RESOLVED": "Resolved"
+    },
+    "escalationReason": {
+      "UNKNOWN_ANSWER": "Unknown answer",
+      "COMPLAINT": "Complaint",
+      "REFUND": "Refund",
+      "EMERGENCY": "Emergency",
+      "GUEST_REQUESTED_HUMAN": "Asked for staff",
+      "BOOKING_CHANGE": "Booking",
+      "USAGE_LIMIT": "Usage limit"
+    },
+    "messageRole": {
+      "GUEST": "Guest",
+      "AI": "AI",
+      "STAFF": "Staff",
+      "SYSTEM": "Automated"
+    }
+  },
+  "property": {
+    "label": "Property",
+    "none": "No properties yet."
+  },
+  "knowledge": {
+    "title": "Knowledge base",
+    "description": "The AI only states facts registered here. Anything else is handed over to staff.",
+    "newItem": "New item",
+    "editItem": "Edit item",
+    "allCategories": "All",
+    "searchPlaceholder": "Search title or content",
+    "search": "Search",
+    "category": "Category",
+    "language": "Written in",
+    "question": "Title (typical question)",
+    "questionHint": "e.g. What time is check-in?",
+    "content": "Content",
+    "contentHint": "Write the facts to tell guests. Be exact about times, prices and locations.",
+    "active": "Use in AI answers",
+    "inactive": "Not used",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this item? This cannot be undone.",
+    "edit": "Edit",
+    "empty": "No matching items.",
+    "count": "{count} items",
+    "errors": {
+      "required": "Required.",
+      "tooLong": "Too long.",
+      "generic": "Could not save. Please try again."
+    }
+  },
+  "playground": {
+    "title": "Chat playground",
+    "description": "Try the AI as a guest would. Conversations here are excluded from metrics.",
+    "placeholder": "Ask like a guest (한국어 · 日本語 · English · 中文)",
+    "send": "Send",
+    "sending": "Generating reply…",
+    "reset": "New conversation",
+    "empty": "No messages yet. Send a question to start.",
+    "status": "Status",
+    "showTranslation": "Show staff translation",
+    "trace": "AI trace",
+    "toolCalls": "Tool calls",
+    "noToolCalls": "No tool calls",
+    "model": "Model",
+    "tokens": "Tokens (input {input} / output {output} / cache read {cacheRead})",
+    "latency": "{ms}ms",
+    "cited": "Cited knowledge",
+    "noCited": "No knowledge cited",
+    "outcome": "Outcome",
+    "error": "Error",
+    "escalation": "Escalation",
+    "mockNotice": "AI_MODE=mock: running a rule-based mock AI, not real Claude responses.",
+    "sendError": "Could not send the message."
+  },
+  "email": {
+    "subject": "[StayTalk] {property}: {reason}",
+    "emergencySubject": "[URGENT] {property}: guest emergency",
+    "intro": "A guest conversation at {property} was handed over to staff.",
+    "reason": "Reason",
+    "summary": "Summary",
+    "question": "Guest message",
+    "open": "Open conversation",
+    "footer": "This email was sent automatically by StayTalk.",
+    "bookingSubject": "[StayTalk] {property}: new booking request {reference}",
+    "bookingIntro": "{property} has a new booking request. Please review and approve or decline it.",
+    "room": "Room",
+    "dates": "Dates",
+    "guests": "Guests",
+    "openBookings": "Open booking requests"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "description": "Review guest conversations and reply directly when needed. Replies are translated into the guest's language.",
+    "all": "All",
+    "showTest": "Include test conversations",
+    "empty": "No conversations.",
+    "noMessages": "(no messages)",
+    "open": "Open",
+    "back": "Back to inbox",
+    "channel": {
+      "WEB_WIDGET": "Web widget",
+      "LINE": "LINE",
+      "KAKAO": "Kakao",
+      "EMAIL": "Email"
+    },
+    "guestLanguage": "Guest language",
+    "escalations": "Escalations",
+    "escalationOpen": "Open",
+    "escalationResolved": "Resolved",
+    "summary": "Summary",
+    "question": "Guest question",
+    "reply": "Reply directly",
+    "replyHint": "Write in {language}; it is translated into the guest's language. The original is kept.",
+    "send": "Send",
+    "sending": "Sending…",
+    "resolve": "Mark resolved",
+    "returnToAi": "Hand back to AI",
+    "aiPaused": "Staff is handling this conversation; the AI will not reply.",
+    "hideTranslation": "Hide translation",
+    "showTranslation": "Show translation",
+    "errors": {
+      "generic": "Something went wrong. Please try again."
+    },
+    "lastActivity": "Last activity",
+    "property": "Property"
+  },
+  "settings": {
+    "title": "Settings",
+    "widget": "Web widget",
+    "widgetDescription": "Paste this code right before '</body>' on your property's website.",
+    "publicKey": "Public key",
+    "allowedOrigins": "Allowed sites",
+    "allowedOriginsHint": "One site URL per line (e.g. https://my-guesthouse.com). The widget won't open on sites not listed here.",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "invalidOrigin": "Invalid URL: {value}",
+    "preview": "Open preview",
+    "line": "LINE official account",
+    "lineDescription": "Enter your Messaging API channel details from the LINE Developers console and register the webhook URL below.",
+    "channelId": "Channel ID",
+    "channelSecret": "Channel secret",
+    "accessToken": "Channel access token",
+    "keepHint": "Leave blank to keep the saved value.",
+    "lineActive": "Answer LINE messages",
+    "webhookUrl": "Webhook URL",
+    "credentialsRequired": "The channel secret and access token are required the first time.",
+    "ownerOnly": "Only owner accounts can change settings.",
+    "invalid": "Please check the values."
+  },
+  "rooms": {
+    "title": "Rooms & inventory",
+    "description": "Manage room types and per-date inventory and rates. Dates without settings use the defaults (total rooms, base rate).",
+    "roomTypes": "Room types",
+    "newRoomType": "New room type",
+    "editRoomType": "Edit room type",
+    "nameKo": "Name (Korean)",
+    "nameJa": "Name (Japanese)",
+    "nameEn": "Name (English)",
+    "capacity": "Max guests",
+    "pricingModel": "Pricing",
+    "PER_ROOM": "Per room per night",
+    "PER_PERSON": "Per person per night",
+    "baseRate": "Base rate ({currency})",
+    "totalRooms": "Total rooms",
+    "active": "On sale",
+    "inactive": "Not on sale",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "nameRequired": "Enter a name in at least one language.",
+    "invalid": "Please check the values.",
+    "calendar": "Inventory calendar",
+    "prev": "Previous 2 weeks",
+    "next": "Next 2 weeks",
+    "closed": "Closed",
+    "override": "Custom",
+    "rooms": "{count} rooms",
+    "editDay": "Set a date",
+    "date": "Date",
+    "roomType": "Room type",
+    "available": "Rooms for sale",
+    "rate": "Rate",
+    "defaultHint": "Blank = default",
+    "closeDay": "Close this date",
+    "apply": "Apply",
+    "clear": "Remove setting",
+    "csv": "CSV upload",
+    "csvHint": "Columns: date,room_type,available,rate,closed — room_type is a room type name or id. Blank means default.",
+    "csvFile": "CSV file",
+    "preview": "Preview",
+    "applyCsv": "Apply {count} rows",
+    "csvOk": "{count} rows validated",
+    "csvErrors": "{count} errors — fix them and upload again.",
+    "csvApplied": "Applied: {upserted} saved, {cleared} removed",
+    "line": "Line {line}",
+    "csvErrorCodes": {
+      "missing_header": "A header row (date,room_type,…) is required",
+      "too_many_rows": "Too many rows (max 2000)",
+      "unknown_room_type": "Unknown room type",
+      "invalid_date": "Invalid date (YYYY-MM-DD)",
+      "invalid_available": "Rooms must be a whole number ≥ 0",
+      "available_exceeds_total": "More than the total rooms",
+      "invalid_rate": "Rate must be a whole number ≥ 0",
+      "invalid_closed": "closed must be yes/no or 1/0"
+    }
+  },
+  "bookings": {
+    "title": "Booking requests",
+    "description": "Booking requests collected by the AI. Approving sends the guest a confirmation automatically.",
+    "empty": "No booking requests.",
+    "status": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "DECLINED": "Declined",
+      "EXPIRED": "Expired"
+    },
+    "reference": "Ref {ref}",
+    "nights": "{count} nights",
+    "guests": "{count} guests",
+    "total": "Estimated price",
+    "guest": "Guest",
+    "contact": "Contact",
+    "language": "Language",
+    "expires": "Expires",
+    "created": "Received",
+    "decided": "Decided",
+    "note": "Requests",
+    "approve": "Approve",
+    "decline": "Decline",
+    "declineReason": "Reason",
+    "declineNote": "Note to the guest (optional, translated)",
+    "confirmDecline": "Decline request",
+    "conversation": "Open conversation",
+    "reasons": {
+      "FULLY_BOOKED": "Fully booked",
+      "DATES_UNAVAILABLE": "Dates unavailable",
+      "GROUP_SIZE": "Too many guests",
+      "OTHER": "Other"
+    },
+    "errors": {
+      "no_availability": "Not enough inventory to approve. Check inventory or decline.",
+      "not_pending": "This request was already handled.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "cancel": "Cancel"
+  },
+  "metrics": {
+    "title": "Metrics",
+    "description": "Real guest conversations only (test conversations excluded). Dates use the property's local time.",
+    "range": "Last {days} days",
+    "conversations": "Conversations",
+    "automationRate": "Automation rate",
+    "automationSub": "AI resolved {ai} of {resolved} closed",
+    "firstResponse": "Avg. first response",
+    "firstResponseSub": "median {median} · {count} escalations",
+    "approvalRate": "Booking approval rate",
+    "approvalSub": "{approved} of {decided} decided · {pending} pending",
+    "cost": "AI cost (est.)",
+    "costSub": "incl. translation",
+    "none": "-",
+    "daily": "Conversations per day",
+    "table": "Show as table",
+    "count": "Conversations",
+    "languages": "Guest languages",
+    "reasons": "Escalation reasons",
+    "bookingStatus": "Booking request outcomes",
+    "noData": "No data yet.",
+    "openNow": "Open now: {ai} with AI · {escalated} waiting for staff",
+    "minutes": "{value} min",
+    "hours": "{value} h",
+    "usage": "AI usage this month",
+    "usageLabel": "Usage vs monthly limit",
+    "usageUnlimited": "No monthly limit",
+    "usageWarning": "This month's usage passed 80% of the limit.",
+    "usageOver": "The monthly limit is reached; new questions go to staff.",
+    "unknownLanguage": "Unknown"
+  },
+  "unanswered": {
+    "title": "Questions the AI couldn't answer",
+    "description": "Add them to the knowledge base and the AI will answer next time.",
+    "empty": "All caught up.",
+    "add": "Add to knowledge",
+    "dismiss": "Dismiss",
+    "original": "Original",
+    "conversation": "Open conversation",
+    "link": "{count} unanswered questions"
+  },
+  "legal": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "draft": "Placeholder page. Replace with legally reviewed text before launch.",
+    "updated": "Last updated: TBD",
+    "todo": "TODO: to be written",
+    "termsSections": {
+      "service": "The service",
+      "account": "Accounts and responsibilities",
+      "ai": "Limits of AI answers",
+      "fees": "Fees and termination",
+      "liability": "Limitation of liability",
+      "law": "Governing law"
+    },
+    "privacySections": {
+      "collected": "Information we collect",
+      "purpose": "How we use it",
+      "retention": "Retention and deletion",
+      "thirdParties": "Processors and international transfers",
+      "rights": "Your rights",
+      "contact": "Contact"
+    },
+    "retentionNote": "Guest conversation logs are masked 90 days after the last message.",
+    "home": "StayTalk home"
+  },
+  "onboarding": {
+    "title": "Property setup",
+    "description": "Four steps to get the AI concierge ready.",
+    "newProperty": "Add a property",
+    "steps": {
+      "property": "Property",
+      "rooms": "Room types",
+      "knowledge": "Knowledge",
+      "widget": "Install widget"
+    },
+    "name": "Property name",
+    "country": "Country",
+    "countries": {
+      "KR": "Korea",
+      "JP": "Japan"
+    },
+    "address": "Address",
+    "timezone": "Time zone",
+    "defaultLanguage": "Knowledge language",
+    "staffLanguage": "Staff language (translation target)",
+    "currency": "Currency",
+    "checkInTime": "Check-in time",
+    "checkOutTime": "Check-out time",
+    "phone": "Phone (optional)",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "finish": "Finish",
+    "saving": "Saving…",
+    "ownerOnly": "Only owner accounts can change property details.",
+    "invalid": "Please check the values.",
+    "roomsHint": "Add the room types you offer. Per-date inventory and rates can be set later under Rooms & inventory.",
+    "addRoom": "Add room type",
+    "roomName": "Room name",
+    "noRooms": "No room types yet.",
+    "knowledgeHint": "Questions guests often ask. Fill in only what you know; empty questions are skipped. The AI only states what is written here.",
+    "saveKnowledge": "Save knowledge",
+    "knowledgeSaved": "Saved {count} items.",
+    "alreadyAdded": "Already added",
+    "widgetHint": "Paste this code into your website and register the sites where the widget may appear.",
+    "done": "All set. Try the AI in the chat playground.",
+    "openPlayground": "Open chat playground",
+    "continueSetup": "Finish setup",
+    "templates": {
+      "checkin_time": {
+        "question": "What are the check-in and check-out times?",
+        "hint": "e.g. Check-in 15:00–22:00, check-out 11:00. Early check-in?"
+      },
+      "self_checkin": {
+        "question": "How do I check in if I arrive late?",
+        "hint": "e.g. self check-in after 22:00, how the door code is sent"
+      },
+      "luggage": {
+        "question": "Can I store my luggage?",
+        "hint": "e.g. free before check-in and after check-out until 18:00"
+      },
+      "wifi": {
+        "question": "Is there Wi-Fi?",
+        "hint": "e.g. free in all rooms; password in the room guide"
+      },
+      "breakfast": {
+        "question": "Is breakfast included?",
+        "hint": "e.g. 8:00–10:00, simple free breakfast"
+      },
+      "parking": {
+        "question": "Is there parking?",
+        "hint": "e.g. no parking; public lot 5 minutes away"
+      },
+      "amenities": {
+        "question": "Are towels and toiletries provided?",
+        "hint": "e.g. towels, shampoo, hair dryer provided"
+      },
+      "smoking": {
+        "question": "Can I smoke?",
+        "hint": "e.g. non-smoking; designated area outside"
+      },
+      "quiet": {
+        "question": "Are there quiet hours?",
+        "hint": "e.g. 22:00–08:00"
+      },
+      "pets": {
+        "question": "Are pets allowed?",
+        "hint": "e.g. no pets except assistance dogs"
+      },
+      "airport": {
+        "question": "How do I get here from the airport?",
+        "hint": "e.g. train route, transfers and total time"
+      },
+      "nearby_food": {
+        "question": "Any restaurants nearby?",
+        "hint": "e.g. market 5 minutes away, local favourites"
+      },
+      "cancellation": {
+        "question": "What is the cancellation policy?",
+        "hint": "e.g. full refund up to 7 days before; 50% 3–6 days before"
+      },
+      "payment": {
+        "question": "Which payment methods do you accept?",
+        "hint": "e.g. credit cards, cash"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    { "path": "/api/cron/expire-bookings", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/close-idle-conversations", "schedule": "0 * * * *" },
+    { "path": "/api/cron/mask-old-conversations", "schedule": "30 3 * * *" }
+  ]
+}
