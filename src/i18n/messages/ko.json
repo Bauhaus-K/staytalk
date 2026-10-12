@@ -26,7 +26,8 @@
     "rooms": "객실·재고",
     "metrics": "지표",
     "playground": "채팅 테스트",
-    "settings": "설정"
+    "settings": "설정",
+    "onboarding": "숙소 설정"
   },
   "dashboard": {
     "welcome": "{name}님, 환영합니다",
@@ -349,5 +350,132 @@
     "original": "원문",
     "conversation": "대화 보기",
     "link": "답하지 못한 질문 {count}건"
+  },
+  "legal": {
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "draft": "초안 자리입니다. 법률 검토를 거친 정식 문안으로 교체해야 합니다.",
+    "updated": "최종 수정일: 미정",
+    "todo": "TODO: 내용 작성 예정",
+    "termsSections": {
+      "service": "서비스 내용",
+      "account": "계정과 책임",
+      "ai": "AI 응답의 한계",
+      "fees": "요금과 해지",
+      "liability": "책임의 제한",
+      "law": "준거법과 관할"
+    },
+    "privacySections": {
+      "collected": "수집하는 정보",
+      "purpose": "이용 목적",
+      "retention": "보유 기간과 파기",
+      "thirdParties": "처리 위탁 및 국외 이전",
+      "rights": "정보주체의 권리",
+      "contact": "문의처"
+    },
+    "retentionNote": "게스트 대화 기록은 마지막 대화 후 90일이 지나면 마스킹됩니다.",
+    "home": "StayTalk 홈"
+  },
+  "onboarding": {
+    "title": "숙소 설정 마법사",
+    "description": "4단계로 AI 응대를 시작할 준비를 합니다.",
+    "newProperty": "새 숙소 추가",
+    "steps": {
+      "property": "숙소 정보",
+      "rooms": "객실 타입",
+      "knowledge": "지식 입력",
+      "widget": "위젯 설치"
+    },
+    "name": "숙소 이름",
+    "country": "국가",
+    "countries": {
+      "KR": "한국",
+      "JP": "일본"
+    },
+    "address": "주소",
+    "timezone": "타임존",
+    "defaultLanguage": "지식 작성 언어",
+    "staffLanguage": "스태프 언어 (번역 대상)",
+    "currency": "통화",
+    "checkInTime": "체크인 시간",
+    "checkOutTime": "체크아웃 시간",
+    "phone": "전화번호 (선택)",
+    "next": "다음",
+    "back": "이전",
+    "skip": "건너뛰기",
+    "finish": "완료",
+    "saving": "저장 중…",
+    "ownerOnly": "숙소 정보는 사장(OWNER) 계정만 변경할 수 있습니다.",
+    "invalid": "입력값을 확인해 주세요.",
+    "roomsHint": "게스트에게 안내할 객실 타입을 추가하세요. 날짜별 재고·요금은 나중에 '객실·재고'에서 설정합니다.",
+    "addRoom": "객실 타입 추가",
+    "roomName": "객실 이름",
+    "noRooms": "아직 객실 타입이 없습니다.",
+    "knowledgeHint": "게스트가 자주 묻는 질문입니다. 답을 아는 항목만 채우세요. 비워 둔 질문은 건너뜁니다. AI는 여기 적힌 내용만 사실로 안내합니다.",
+    "saveKnowledge": "지식 저장",
+    "knowledgeSaved": "{count}개 항목을 저장했습니다.",
+    "alreadyAdded": "이미 등록됨",
+    "widgetHint": "아래 코드를 홈페이지에 붙이고, 위젯을 표시할 사이트 주소를 등록하세요.",
+    "done": "설정이 끝났습니다. 채팅 테스트에서 AI 응답을 확인해 보세요.",
+    "openPlayground": "채팅 테스트 열기",
+    "continueSetup": "설정 마무리하기",
+    "templates": {
+      "checkin_time": {
+        "question": "체크인·체크아웃 시간은 언제인가요?",
+        "hint": "예: 체크인 15:00~22:00, 체크아웃 11:00. 얼리 체크인 가능 여부"
+      },
+      "self_checkin": {
+        "question": "늦게 도착하면 어떻게 체크인하나요?",
+        "hint": "예: 22시 이후 셀프 체크인, 비밀번호 안내 방법"
+      },
+      "luggage": {
+        "question": "짐 보관이 되나요?",
+        "hint": "예: 체크인 전·체크아웃 후 18시까지 무료 보관"
+      },
+      "wifi": {
+        "question": "와이파이가 있나요?",
+        "hint": "예: 전 객실 무료, 비밀번호는 객실 안내문에"
+      },
+      "breakfast": {
+        "question": "조식이 제공되나요?",
+        "hint": "예: 08:00~10:00 무료 간단 조식"
+      },
+      "parking": {
+        "question": "주차할 수 있나요?",
+        "hint": "예: 주차 불가, 근처 공영주차장 도보 5분"
+      },
+      "amenities": {
+        "question": "수건·어메니티가 있나요?",
+        "hint": "예: 수건, 샴푸, 드라이어 제공. 칫솔 판매"
+      },
+      "smoking": {
+        "question": "흡연할 수 있나요?",
+        "hint": "예: 전 구역 금연, 지정 흡연 구역 위치"
+      },
+      "quiet": {
+        "question": "조용히 해야 하는 시간이 있나요?",
+        "hint": "예: 22:00~08:00 조용한 시간"
+      },
+      "pets": {
+        "question": "반려동물 동반이 가능한가요?",
+        "hint": "예: 불가 (안내견 제외)"
+      },
+      "airport": {
+        "question": "공항에서 어떻게 가나요?",
+        "hint": "예: 공항철도 → 서울역 → 지하철, 총 소요 시간"
+      },
+      "nearby_food": {
+        "question": "근처 추천 식당이 있나요?",
+        "hint": "예: 도보 5분 시장, 추천 메뉴"
+      },
+      "cancellation": {
+        "question": "취소·환불 규정은 어떻게 되나요?",
+        "hint": "예: 7일 전까지 전액 환불, 3~6일 전 50%"
+      },
+      "payment": {
+        "question": "어떤 결제 수단을 사용할 수 있나요?",
+        "hint": "예: 신용카드, 현금(원화)"
+      }
+    }
   }
 }

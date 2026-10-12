@@ -14,6 +14,7 @@ export type WidgetStrings = {
   staff: string;
   privacyNote: string;
   connecting: string;
+  privacyPolicy: string;
 };
 
 export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
@@ -29,6 +30,7 @@ export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
     staff: "스태프",
     privacyNote: "카드번호·여권번호는 보내지 마세요.",
     connecting: "연결 중…",
+    privacyPolicy: "개인정보처리방침",
   },
   ja: {
     subtitle: "AIコンシェルジュ・必要に応じて担当者が直接ご返信します",
@@ -42,6 +44,7 @@ export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
     staff: "スタッフ",
     privacyNote: "カード番号やパスポート番号は送信しないでください。",
     connecting: "接続中…",
+    privacyPolicy: "プライバシーポリシー",
   },
   en: {
     subtitle: "AI concierge · staff will step in when needed",
@@ -55,6 +58,7 @@ export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
     staff: "Staff",
     privacyNote: "Please don't send card or passport numbers.",
     connecting: "Connecting…",
+    privacyPolicy: "Privacy policy",
   },
   "zh-CN": {
     subtitle: "AI 礼宾 · 需要时由工作人员直接回复",
@@ -68,6 +72,7 @@ export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
     staff: "工作人员",
     privacyNote: "请勿发送银行卡号或护照号码。",
     connecting: "连接中…",
+    privacyPolicy: "隐私政策",
   },
   "zh-TW": {
     subtitle: "AI 禮賓 · 需要時由工作人員直接回覆",
@@ -81,6 +86,7 @@ export const WIDGET_STRINGS: Record<WidgetLanguage, WidgetStrings> = {
     staff: "工作人員",
     privacyNote: "請勿傳送信用卡號或護照號碼。",
     connecting: "連線中…",
+    privacyPolicy: "隱私權政策",
   },
 };
 

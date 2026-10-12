@@ -12,6 +12,7 @@ const ITEMS = [
   { href: "/rooms", key: "rooms" },
   { href: "/metrics", key: "metrics" },
   { href: "/playground", key: "playground" },
+  { href: "/onboarding", key: "onboarding" },
   { href: "/settings", key: "settings" },
 ] as const;
 

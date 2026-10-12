@@ -282,7 +282,17 @@ export function WidgetChat({
             <Send className="size-4" />
           </button>
         </div>
-        <p className="mt-2 text-center text-[11px] text-muted-foreground">{t.privacyNote}</p>
+        <p className="mt-2 text-center text-[11px] text-muted-foreground">
+          {t.privacyNote} ·{" "}
+          <a
+            href={`/${language === "ko" || language === "ja" ? language : "en"}/legal/privacy`}
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            {t.privacyPolicy}
+          </a>
+        </p>
       </form>
     </div>
   );

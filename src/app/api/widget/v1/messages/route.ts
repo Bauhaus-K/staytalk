@@ -53,3 +53,6 @@ export async function POST(request: Request) {
   const messages = await listGuestMessages(db, result.conversationId);
   return json({ messages });
 }
+
+// The agent may run for up to AI_TIMEOUT_MS (default 30s) plus translations.
+export const maxDuration = 60;

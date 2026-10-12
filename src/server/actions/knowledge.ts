@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { scheduleEmbedding } from "@/server/services/embedding-runtime";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireTenant } from "@/server/auth/session";
@@ -62,6 +63,7 @@ export async function saveKnowledgeItem(
         content: input.content,
         language: input.language,
         active: input.active,
+        embeddingModel: null, // content changed: vector is stale
       },
     });
     if (result.count === 0) return { error: "generic" };
@@ -84,6 +86,7 @@ export async function saveKnowledgeItem(
     }
   }
 
+  scheduleEmbedding(user.organizationId, property.id);
   revalidatePath(`/${locale}/knowledge`);
   redirect(`/${locale}/knowledge?property=${property.id}`);
 }

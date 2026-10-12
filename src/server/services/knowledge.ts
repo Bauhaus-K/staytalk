@@ -4,6 +4,8 @@ import { z } from "zod";
 import type { DbClient } from "@/server/db/client";
 import type { TenantDb } from "@/server/db/tenant";
 import { GUEST_LANGUAGES } from "@/server/language/codes";
+import type { Embedder } from "@/server/embeddings";
+import { vectorSearch } from "./knowledge-embeddings";
 
 export const KNOWLEDGE_CATEGORIES = [
   "HOUSE_RULES",
@@ -54,7 +56,7 @@ function queryTerms(query: string): string[] {
  * configs; substring matching covers unspaced Japanese/Chinese text). Raw SQL bypasses the
  * tenant extension, so organizationId is applied explicitly here.
  */
-export async function searchKnowledge(
+async function trigramSearch(
   client: DbClient,
   params: {
     organizationId: string;
@@ -102,6 +104,46 @@ export async function searchKnowledge(
     LIMIT ${limit}
   `;
   return rows;
+}
+
+export type SearchMode = "trigram" | "vector" | "hybrid";
+
+/**
+ * Knowledge search used by the agent. Trigram by default; with an embedder,
+ * "hybrid" merges trigram and vector hits (score = max of trigram score and
+ * cosine similarity), "vector" uses embeddings only.
+ */
+export async function searchKnowledge(
+  client: DbClient,
+  params: Parameters<typeof trigramSearch>[1],
+  options: { embedder?: Embedder | null; mode?: SearchMode } = {},
+): Promise<KnowledgeHit[]> {
+  const embedder = options.embedder ?? null;
+  const mode: SearchMode = options.mode ?? (embedder ? "hybrid" : "trigram");
+  if (mode === "trigram" || !embedder) return trigramSearch(client, params);
+
+  const limit = Math.min(params.limit ?? 5, 10);
+  const [lexical, semantic] = await Promise.all([
+    mode === "hybrid" ? trigramSearch(client, { ...params, limit: 10 }) : Promise.resolve([]),
+    vectorSearch(client, embedder, { ...params, limit: 10 }),
+  ]);
+  const scores = new Map<string, number>();
+  for (const h of lexical) scores.set(h.id, h.score);
+  for (const h of semantic) scores.set(h.id, Math.max(scores.get(h.id) ?? 0, h.similarity));
+  const ids = [...scores.keys()];
+  if (!ids.length) return [];
+  const rows = await client.knowledgeItem.findMany({
+    where: {
+      id: { in: ids },
+      organizationId: params.organizationId,
+      propertyId: params.propertyId,
+    },
+    select: { id: true, category: true, question: true, content: true, language: true },
+  });
+  return rows
+    .map((r) => ({ ...r, score: scores.get(r.id)! }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
 }
 
 /** All active items for the system prompt, in a stable order (cache-friendly). */

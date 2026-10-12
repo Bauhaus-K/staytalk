@@ -13,6 +13,7 @@ export default async function DashboardHome({ params }: PageProps<"/[locale]">) 
   const { user, db } = await requireTenant(locale);
   const t = await getTranslations("dashboard");
   const tm = await getTranslations("metrics");
+  const to = await getTranslations("onboarding");
 
   const [organization, properties] = await Promise.all([
     db.organization.findFirst(),
@@ -59,6 +60,15 @@ export default async function DashboardHome({ params }: PageProps<"/[locale]">) 
                   <span>{t("knowledgeCount", { count: p._count.knowledgeItems })}</span>
                   <span>{t("roomTypeCount", { count: p._count.roomTypes })}</span>
                 </div>
+                {p._count.roomTypes === 0 || p._count.knowledgeItems < 5 ? (
+                  <Link
+                    href={`/onboarding?property=${p.id}&step=${p._count.roomTypes === 0 ? 2 : 3}`}
+                    className="font-medium underline"
+                    data-testid="continue-setup"
+                  >
+                    {to("continueSetup")} →
+                  </Link>
+                ) : null}
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
                   <Link href="/inbox?status=ESCALATED" className="underline">
                     {t("waiting", { count: waiting })}

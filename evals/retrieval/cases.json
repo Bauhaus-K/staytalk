@@ -1,0 +1,148 @@
+[
+  {
+    "property": "seoul",
+    "kind": "keyword",
+    "query": "체크인 시간",
+    "expected": "체크인·체크아웃 시간"
+  },
+  {
+    "property": "seoul",
+    "kind": "keyword",
+    "query": "셀프 체크인",
+    "expected": "셀프 체크인 방법"
+  },
+  { "property": "seoul", "kind": "keyword", "query": "와이파이", "expected": "와이파이" },
+  { "property": "seoul", "kind": "keyword", "query": "주차", "expected": "주차" },
+  {
+    "property": "seoul",
+    "kind": "keyword",
+    "query": "인천공항",
+    "expected": "인천공항에서 오는 방법"
+  },
+  { "property": "seoul", "kind": "keyword", "query": "통인시장", "expected": "근처 맛집과 시장" },
+  { "property": "seoul", "kind": "keyword", "query": "경복궁", "expected": "주변 관광지" },
+  { "property": "seoul", "kind": "keyword", "query": "환불", "expected": "취소 및 환불 정책" },
+  {
+    "property": "seoul",
+    "kind": "paraphrase",
+    "query": "캐리어 맡길 수 있나요",
+    "expected": "짐 보관"
+  },
+  { "property": "seoul", "kind": "paraphrase", "query": "인터넷 연결", "expected": "와이파이" },
+  { "property": "seoul", "kind": "paraphrase", "query": "아침밥", "expected": "조식" },
+  {
+    "property": "seoul",
+    "kind": "paraphrase",
+    "query": "요리할 수 있는 곳",
+    "expected": "공용 주방"
+  },
+  { "property": "seoul", "kind": "paraphrase", "query": "빨래하고 싶어요", "expected": "세탁" },
+  {
+    "property": "seoul",
+    "kind": "paraphrase",
+    "query": "강아지 데려가도 되나요",
+    "expected": "반려동물"
+  },
+  {
+    "property": "seoul",
+    "kind": "paraphrase",
+    "query": "밤에 떠들어도 되나요",
+    "expected": "조용한 시간(소음)"
+  },
+  {
+    "property": "seoul",
+    "kind": "paraphrase",
+    "query": "늦게 도착하면 비밀번호",
+    "expected": "셀프 체크인 방법"
+  },
+  { "property": "seoul", "kind": "cross-language", "query": "breakfast time", "expected": "조식" },
+  {
+    "property": "seoul",
+    "kind": "cross-language",
+    "query": "wifi password",
+    "expected": "와이파이"
+  },
+  {
+    "property": "seoul",
+    "kind": "cross-language",
+    "query": "how to get from Incheon airport",
+    "expected": "인천공항에서 오는 방법"
+  },
+  { "property": "seoul", "kind": "cross-language", "query": "喫煙できますか", "expected": "흡연" },
+  {
+    "property": "fukuoka",
+    "kind": "keyword",
+    "query": "大浴場",
+    "expected": "大浴場（温泉）の利用時間"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "keyword",
+    "query": "タトゥー",
+    "expected": "タトゥー（入れ墨）"
+  },
+  { "property": "fukuoka", "kind": "keyword", "query": "屋台", "expected": "中洲の屋台" },
+  {
+    "property": "fukuoka",
+    "kind": "keyword",
+    "query": "太宰府",
+    "expected": "太宰府天満宮への行き方"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "keyword",
+    "query": "キャンセル料",
+    "expected": "キャンセルポリシー"
+  },
+  { "property": "fukuoka", "kind": "keyword", "query": "駐車場", "expected": "駐車場" },
+  {
+    "property": "fukuoka",
+    "kind": "paraphrase",
+    "query": "温泉は何時まで",
+    "expected": "大浴場（温泉）の利用時間"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "paraphrase",
+    "query": "刺青があります",
+    "expected": "タトゥー（入れ墨）"
+  },
+  { "property": "fukuoka", "kind": "paraphrase", "query": "家族風呂", "expected": "貸切風呂" },
+  {
+    "property": "fukuoka",
+    "kind": "paraphrase",
+    "query": "晩ご飯の時間",
+    "expected": "夕食・朝食の時間"
+  },
+  { "property": "fukuoka", "kind": "paraphrase", "query": "車で行きます", "expected": "駐車場" },
+  {
+    "property": "fukuoka",
+    "kind": "paraphrase",
+    "query": "釜山からの船",
+    "expected": "博多港（釜山からのフェリー）からのアクセス"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "cross-language",
+    "query": "onsen opening hours",
+    "expected": "大浴場（温泉）の利用時間"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "cross-language",
+    "query": "타투 있어도 목욕 가능?",
+    "expected": "タトゥー（入れ墨）"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "cross-language",
+    "query": "peanut allergy dinner",
+    "expected": "食物アレルギー・食事制限"
+  },
+  {
+    "property": "fukuoka",
+    "kind": "cross-language",
+    "query": "怎么从福冈机场过去",
+    "expected": "福岡空港からのアクセス"
+  }
+]

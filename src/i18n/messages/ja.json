@@ -26,7 +26,8 @@
     "rooms": "客室・在庫",
     "metrics": "指標",
     "playground": "チャットテスト",
-    "settings": "設定"
+    "settings": "設定",
+    "onboarding": "施設設定"
   },
   "dashboard": {
     "welcome": "{name}さん、ようこそ",
@@ -349,5 +350,132 @@
     "original": "原文",
     "conversation": "会話を見る",
     "link": "回答できなかった質問 {count}件"
+  },
+  "legal": {
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "draft": "仮のページです。法務確認を経た正式な文面に差し替える必要があります。",
+    "updated": "最終更新日：未定",
+    "todo": "TODO：作成予定",
+    "termsSections": {
+      "service": "サービス内容",
+      "account": "アカウントと責任",
+      "ai": "AI回答の限界",
+      "fees": "料金と解約",
+      "liability": "責任の制限",
+      "law": "準拠法と管轄"
+    },
+    "privacySections": {
+      "collected": "取得する情報",
+      "purpose": "利用目的",
+      "retention": "保存期間と廃棄",
+      "thirdParties": "委託および国外移転",
+      "rights": "本人の権利",
+      "contact": "お問い合わせ先"
+    },
+    "retentionNote": "ゲストとの会話記録は、最後のやり取りから90日経過後にマスキングされます。",
+    "home": "StayTalk ホーム"
+  },
+  "onboarding": {
+    "title": "施設設定ウィザード",
+    "description": "4つのステップでAI対応の準備をします。",
+    "newProperty": "施設を追加",
+    "steps": {
+      "property": "施設情報",
+      "rooms": "客室タイプ",
+      "knowledge": "ナレッジ入力",
+      "widget": "ウィジェット設置"
+    },
+    "name": "施設名",
+    "country": "国",
+    "countries": {
+      "KR": "韓国",
+      "JP": "日本"
+    },
+    "address": "住所",
+    "timezone": "タイムゾーン",
+    "defaultLanguage": "ナレッジの記載言語",
+    "staffLanguage": "スタッフの言語（翻訳先）",
+    "currency": "通貨",
+    "checkInTime": "チェックイン時刻",
+    "checkOutTime": "チェックアウト時刻",
+    "phone": "電話番号（任意）",
+    "next": "次へ",
+    "back": "戻る",
+    "skip": "スキップ",
+    "finish": "完了",
+    "saving": "保存中…",
+    "ownerOnly": "施設情報はオーナーアカウントのみ変更できます。",
+    "invalid": "入力内容をご確認ください。",
+    "roomsHint": "ゲストに案内する客室タイプを追加してください。日別の在庫・料金は後で「客室・在庫」で設定します。",
+    "addRoom": "客室タイプを追加",
+    "roomName": "客室名",
+    "noRooms": "客室タイプはまだありません。",
+    "knowledgeHint": "よくある質問です。回答できる項目だけ入力してください。空欄の質問はスキップされます。AIはここに書かれた内容のみを事実として案内します。",
+    "saveKnowledge": "ナレッジを保存",
+    "knowledgeSaved": "{count}件を保存しました。",
+    "alreadyAdded": "登録済み",
+    "widgetHint": "以下のコードをサイトに貼り付け、ウィジェットを表示するサイトのURLを登録してください。",
+    "done": "設定が完了しました。チャットテストでAIの回答を確認してみてください。",
+    "openPlayground": "チャットテストを開く",
+    "continueSetup": "設定を完了する",
+    "templates": {
+      "checkin_time": {
+        "question": "チェックイン・チェックアウトの時間は？",
+        "hint": "例：チェックイン15:00〜22:00、チェックアウト11:00。アーリーチェックインの可否"
+      },
+      "self_checkin": {
+        "question": "遅く到着する場合のチェックイン方法は？",
+        "hint": "例：22時以降のセルフチェックイン、暗証番号の案内方法"
+      },
+      "luggage": {
+        "question": "荷物を預けられますか？",
+        "hint": "例：チェックイン前・チェックアウト後17時まで無料"
+      },
+      "wifi": {
+        "question": "Wi-Fiはありますか？",
+        "hint": "例：全館無料、パスワードは客室案内に記載"
+      },
+      "breakfast": {
+        "question": "朝食はありますか？",
+        "hint": "例：7:30〜9:00、お食事処にて"
+      },
+      "parking": {
+        "question": "駐車場はありますか？",
+        "hint": "例：2台分、1泊1,000円、要予約"
+      },
+      "amenities": {
+        "question": "タオルやアメニティはありますか？",
+        "hint": "例：浴衣、タオル、歯ブラシ等をご用意"
+      },
+      "smoking": {
+        "question": "喫煙はできますか？",
+        "hint": "例：館内禁煙、喫煙所の場所"
+      },
+      "quiet": {
+        "question": "静かにすべき時間はありますか？",
+        "hint": "例：22時以降はお静かに、門限23時"
+      },
+      "pets": {
+        "question": "ペットは同伴できますか？",
+        "hint": "例：不可（補助犬を除く）"
+      },
+      "airport": {
+        "question": "空港からの行き方は？",
+        "hint": "例：地下鉄で博多駅まで5分、徒歩12分"
+      },
+      "nearby_food": {
+        "question": "近くのおすすめの飲食店は？",
+        "hint": "例：徒歩5分の屋台街"
+      },
+      "cancellation": {
+        "question": "キャンセルポリシーは？",
+        "hint": "例：7日前〜3日前20%、前日50%、当日100%"
+      },
+      "payment": {
+        "question": "支払い方法は？",
+        "hint": "例：現金、クレジットカード、交通系IC"
+      }
+    }
   }
 }

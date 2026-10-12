@@ -26,3 +26,6 @@ export async function POST(
   // Empty event lists are LINE's "Verify" requests.
   return new Response(null, { status: 200 });
 }
+
+// The agent may run for up to AI_TIMEOUT_MS (default 30s) plus translations.
+export const maxDuration = 60;

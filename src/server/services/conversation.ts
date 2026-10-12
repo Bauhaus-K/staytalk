@@ -10,6 +10,7 @@ import { GUEST_STRINGS } from "@/server/language/guest-strings";
 import { isGuestLanguage, type GuestLanguage } from "@/server/language/codes";
 import { detectGuestLanguage, translateText } from "@/server/language/translate";
 import type { Notifier } from "@/server/notifications";
+import type { Embedder } from "@/server/embeddings";
 import { maskContact } from "@/server/privacy/contact";
 import { maskPii } from "@/server/privacy/pii";
 import { escalateConversation } from "./escalation";
@@ -22,6 +23,8 @@ export type ConversationDeps = {
   client: DbClient;
   llm: LlmClient;
   notifier: Notifier;
+  /** Enables hybrid (semantic) knowledge search when set. */
+  embedder?: Embedder | null;
   maxToolCalls: number;
   timeoutMs: number;
   /** Messages of history sent to the model (including the current one). */
@@ -186,6 +189,7 @@ export async function handleGuestMessage(
     db,
     client: deps.client,
     notifier: deps.notifier,
+    embedder: deps.embedder ?? null,
     now: now(),
     state: {},
   };

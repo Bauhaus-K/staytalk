@@ -19,12 +19,16 @@ export const searchKnowledgeTool = defineTool({
     category: z.enum(KNOWLEDGE_CATEGORIES).optional().describe("Optional category filter"),
   }),
   async run(input, ctx) {
-    const hits = await searchKnowledge(ctx.client, {
-      organizationId: ctx.organizationId,
-      propertyId: ctx.property.id,
-      query: input.query,
-      category: input.category,
-    });
+    const hits = await searchKnowledge(
+      ctx.client,
+      {
+        organizationId: ctx.organizationId,
+        propertyId: ctx.property.id,
+        query: input.query,
+        category: input.category,
+      },
+      { embedder: ctx.embedder },
+    );
     return {
       items: hits.map((h) => ({
         id: h.id,

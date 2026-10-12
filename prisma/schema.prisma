@@ -282,18 +282,22 @@ model Availability {
 // ---------------------------------------------------------------------------
 
 model KnowledgeItem {
-  id             String            @id @default(cuid())
+  id             String                       @id @default(cuid())
   organizationId String
   propertyId     String
   category       KnowledgeCategory
   // Short title / representative question.
   question       String
-  content        String            @db.Text
+  content        String                       @db.Text
   // Language the item was written in.
   language       String
-  active         Boolean           @default(true)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  active         Boolean                      @default(true)
+  // Optional semantic search (pgvector). Written via raw SQL; `embeddingModel`
+  // names the model that produced it (null = missing or stale).
+  embedding      Unsupported("vector(1024)")?
+  embeddingModel String?
+  createdAt      DateTime                     @default(now())
+  updatedAt      DateTime                     @updatedAt
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   property     Property     @relation(fields: [propertyId, organizationId], references: [id, organizationId], onDelete: Cascade)

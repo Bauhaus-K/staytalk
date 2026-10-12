@@ -6,6 +6,7 @@ import { getNotifier, setNotifier } from "@/server/notifications";
 import { EmailNotifier } from "@/server/notifications/email";
 import { registerPusher } from "@/server/channels/registry";
 import { linePusher } from "./line";
+import { getEmbedder } from "@/server/embeddings";
 import type { ConversationDeps } from "./conversation";
 
 let runtimeReady = false;
@@ -37,6 +38,7 @@ export function conversationDeps(): ConversationDeps {
     client: prisma,
     llm: getLlmClient(),
     notifier: getNotifier(),
+    embedder: getEmbedder(),
     maxToolCalls: env.AI_MAX_TOOL_CALLS,
     timeoutMs: env.AI_TIMEOUT_MS,
   };

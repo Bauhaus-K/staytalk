@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { LoginForm } from "./login-form";
+import { LegalLinks } from "@/components/layout/legal-links";
 import { asLocale } from "@/i18n/locale";
 
 export default async function LoginPage({ params, searchParams }: PageProps<"/[locale]/login">) {
@@ -37,6 +38,7 @@ export default async function LoginPage({ params, searchParams }: PageProps<"/[l
           </CardContent>
         </Card>
         <LocaleSwitcher />
+        <LegalLinks />
       </div>
     </main>
   );

@@ -37,20 +37,22 @@ Decisions to remember:
 
 ## Commands
 
-| Command                                      | Purpose                                                                                 |
-| -------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `docker compose up -d`                       | Start Postgres (:5432, dbs `staytalk` + `staytalk_test`) and Mailpit (UI :8025)         |
-| `pnpm dev`                                   | Dev server (http://localhost:3000)                                                      |
-| `pnpm db:migrate`                            | Create/apply a migration (`prisma migrate dev`)                                         |
-| `pnpm db:deploy` / `pnpm db:seed`            | Apply migrations / seed demo data (idempotent)                                          |
-| `pnpm db:reset`                              | Drop, re-migrate and seed the dev database                                              |
-| `pnpm lint` / `pnpm typecheck` / `pnpm test` | Quality gate (must pass each phase). `test` needs Postgres up                           |
-| `pnpm test:e2e`                              | Playwright; starts its own dev server on :3100 against `staytalk_test`                  |
-| `pnpm format`                                | Prettier                                                                                |
-| `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`                     |
-| `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)                 |
-| `pnpm job <name>`                            | Batch job locally: `expire-bookings`, `close-idle-conversations` (= `/api/cron/<name>`) |
-| `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173                      |
+| Command                                      | Purpose                                                                                                                              |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `docker compose up -d`                       | Start Postgres (:5432, dbs `staytalk` + `staytalk_test`) and Mailpit (UI :8025)                                                      |
+| `pnpm dev`                                   | Dev server (http://localhost:3000)                                                                                                   |
+| `pnpm db:migrate`                            | Create/apply a migration (`prisma migrate dev`)                                                                                      |
+| `pnpm db:deploy` / `pnpm db:seed`            | Apply migrations / seed demo data (idempotent)                                                                                       |
+| `pnpm db:reset`                              | Drop, re-migrate and seed the dev database                                                                                           |
+| `pnpm lint` / `pnpm typecheck` / `pnpm test` | Quality gate (must pass each phase). `test` needs Postgres up                                                                        |
+| `pnpm test:e2e`                              | Playwright; starts its own dev server on :3100 against `staytalk_test`                                                               |
+| `pnpm format`                                | Prettier                                                                                                                             |
+| `pnpm eval [--mode=live] [--filter=id]`      | Agent evals (default mock) → `evals/reports/`; uses `staytalk_test`                                                                  |
+| `pnpm widget:build`                          | Widget loader bundle → `public/widget/v1.js` (run by `dev`/`build`/E2E)                                                              |
+| `pnpm job <name>`                            | Batch job locally: `expire-bookings`, `close-idle-conversations`, `mask-old-conversations`, `embed-knowledge` (= `/api/cron/<name>`) |
+| `pnpm eval:retrieval [--provider=voyage]`    | Knowledge retrieval eval: trigram vs vector vs hybrid                                                                                |
+| `pnpm admin:create-owner --org … --email …`  | Create a tenant + first OWNER (no self-signup)                                                                                       |
+| `pnpm demo:host`                             | Static "property website" with the widget on http://localhost:4173                                                                   |
 
 E2E with a preinstalled Chromium: `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome pnpm test:e2e`.
 
@@ -64,7 +66,8 @@ src/
   proxy.ts                      next-intl routing + optimistic auth redirect
   auth.ts                       Auth.js config (providers, callbacks, session shape)
   app/[locale]/login/           login (password + magic link)
-  app/[locale]/(dashboard)/     inbox, bookings, knowledge, rooms, metrics, playground, settings
+  app/[locale]/(dashboard)/     inbox, bookings, knowledge(+unanswered), rooms, metrics, playground, onboarding, settings
+  app/[locale]/legal/           terms / privacy placeholders (public, TODO legal text)
   app/widget/frame              iframe chat UI for guests — own root layout, no dashboard auth
   app/api/auth/[...nextauth]    Auth.js handlers
   app/api/widget/v1/*           widget API (session, messages): signed session token, same-origin only, rate limit
@@ -87,7 +90,8 @@ src/
     actions/                    server actions (knowledge CRUD, playground, inbox, settings)
     notifications/              Notifier interface; EmailNotifier (per-recipient locale); Alimtalk/LINE stubs
     privacy/                    PII detection + masking
-    jobs/                       job registry (expire-bookings, close-idle-conversations; masking in Phase 5)
+    jobs/                       job registry (expire-bookings, close-idle-conversations, mask-old-conversations, embed-knowledge)
+    embeddings/                 Embedder interface: HashEmbedder (local baseline), VoyageEmbedder (opt-in)
   generated/prisma/             generated client (gitignored)
 widget/loader.ts                embeddable loader source (esbuild → public/widget/v1.js, gitignored)
 scripts/demo-host.mjs           static demo "property website" (also used by E2E on :4173/:4174)
@@ -181,6 +185,23 @@ evals/                          cases/*.json (schema.ts), run.ts, reports/ (giti
   points that may notify staff or push to guests.
 - next-intl messages are ICU: escape literal `<`/`{` with apostrophes (e.g. `'</body>'`);
   `src/i18n/messages.test.ts` checks syntax and key parity across ko/ja/en.
+
+## Retention, onboarding & search notes
+
+- `mask-old-conversations` (daily): conversations idle > `RETENTION_DAYS` (90) get all message
+  bodies, escalation texts, tool-call payloads and channel user ids replaced (`[masked]`);
+  metadata stays for metrics. Bookings lose guest name/contact/notes once checkout is older
+  than the retention period.
+- Onboarding wizard (`/onboarding`): property → room types → template questions
+  (`services/onboarding-templates.json` + `onboarding.templates.*` messages) → widget code.
+  Owners only for property details. First tenant/owner: `pnpm admin:create-owner`.
+- Semantic search is opt-in: `EMBEDDING_PROVIDER=none|hash|voyage` (default none = trigram).
+  With an embedder, search is hybrid (score = max(trigram, cosine)). Vectors live in
+  `KnowledgeItem.embedding` (pgvector, 1024-d, written with raw SQL; `embeddingModel` null =
+  stale). Edits re-embed in `after()`. No ANN index on purpose (small per-property sets; Prisma
+  can't express HNSW without schema drift). Voyage is an external data processor: enabling it in
+  production needs the owner's approval and a privacy-policy update.
+- Deployment: `docs/DEPLOY.md` (Vercel + Neon/Supabase, `MIGRATE_DATABASE_URL` for migrations).
 
 ## Agent implementation notes
 

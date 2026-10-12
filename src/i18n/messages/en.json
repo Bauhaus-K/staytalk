@@ -26,7 +26,8 @@
     "rooms": "Rooms & inventory",
     "metrics": "Metrics",
     "playground": "Chat playground",
-    "settings": "Settings"
+    "settings": "Settings",
+    "onboarding": "Setup"
   },
   "dashboard": {
     "welcome": "Welcome, {name}",
@@ -349,5 +350,132 @@
     "original": "Original",
     "conversation": "Open conversation",
     "link": "{count} unanswered questions"
+  },
+  "legal": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "draft": "Placeholder page. Replace with legally reviewed text before launch.",
+    "updated": "Last updated: TBD",
+    "todo": "TODO: to be written",
+    "termsSections": {
+      "service": "The service",
+      "account": "Accounts and responsibilities",
+      "ai": "Limits of AI answers",
+      "fees": "Fees and termination",
+      "liability": "Limitation of liability",
+      "law": "Governing law"
+    },
+    "privacySections": {
+      "collected": "Information we collect",
+      "purpose": "How we use it",
+      "retention": "Retention and deletion",
+      "thirdParties": "Processors and international transfers",
+      "rights": "Your rights",
+      "contact": "Contact"
+    },
+    "retentionNote": "Guest conversation logs are masked 90 days after the last message.",
+    "home": "StayTalk home"
+  },
+  "onboarding": {
+    "title": "Property setup",
+    "description": "Four steps to get the AI concierge ready.",
+    "newProperty": "Add a property",
+    "steps": {
+      "property": "Property",
+      "rooms": "Room types",
+      "knowledge": "Knowledge",
+      "widget": "Install widget"
+    },
+    "name": "Property name",
+    "country": "Country",
+    "countries": {
+      "KR": "Korea",
+      "JP": "Japan"
+    },
+    "address": "Address",
+    "timezone": "Time zone",
+    "defaultLanguage": "Knowledge language",
+    "staffLanguage": "Staff language (translation target)",
+    "currency": "Currency",
+    "checkInTime": "Check-in time",
+    "checkOutTime": "Check-out time",
+    "phone": "Phone (optional)",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "finish": "Finish",
+    "saving": "Saving…",
+    "ownerOnly": "Only owner accounts can change property details.",
+    "invalid": "Please check the values.",
+    "roomsHint": "Add the room types you offer. Per-date inventory and rates can be set later under Rooms & inventory.",
+    "addRoom": "Add room type",
+    "roomName": "Room name",
+    "noRooms": "No room types yet.",
+    "knowledgeHint": "Questions guests often ask. Fill in only what you know; empty questions are skipped. The AI only states what is written here.",
+    "saveKnowledge": "Save knowledge",
+    "knowledgeSaved": "Saved {count} items.",
+    "alreadyAdded": "Already added",
+    "widgetHint": "Paste this code into your website and register the sites where the widget may appear.",
+    "done": "All set. Try the AI in the chat playground.",
+    "openPlayground": "Open chat playground",
+    "continueSetup": "Finish setup",
+    "templates": {
+      "checkin_time": {
+        "question": "What are the check-in and check-out times?",
+        "hint": "e.g. Check-in 15:00–22:00, check-out 11:00. Early check-in?"
+      },
+      "self_checkin": {
+        "question": "How do I check in if I arrive late?",
+        "hint": "e.g. self check-in after 22:00, how the door code is sent"
+      },
+      "luggage": {
+        "question": "Can I store my luggage?",
+        "hint": "e.g. free before check-in and after check-out until 18:00"
+      },
+      "wifi": {
+        "question": "Is there Wi-Fi?",
+        "hint": "e.g. free in all rooms; password in the room guide"
+      },
+      "breakfast": {
+        "question": "Is breakfast included?",
+        "hint": "e.g. 8:00–10:00, simple free breakfast"
+      },
+      "parking": {
+        "question": "Is there parking?",
+        "hint": "e.g. no parking; public lot 5 minutes away"
+      },
+      "amenities": {
+        "question": "Are towels and toiletries provided?",
+        "hint": "e.g. towels, shampoo, hair dryer provided"
+      },
+      "smoking": {
+        "question": "Can I smoke?",
+        "hint": "e.g. non-smoking; designated area outside"
+      },
+      "quiet": {
+        "question": "Are there quiet hours?",
+        "hint": "e.g. 22:00–08:00"
+      },
+      "pets": {
+        "question": "Are pets allowed?",
+        "hint": "e.g. no pets except assistance dogs"
+      },
+      "airport": {
+        "question": "How do I get here from the airport?",
+        "hint": "e.g. train route, transfers and total time"
+      },
+      "nearby_food": {
+        "question": "Any restaurants nearby?",
+        "hint": "e.g. market 5 minutes away, local favourites"
+      },
+      "cancellation": {
+        "question": "What is the cancellation policy?",
+        "hint": "e.g. full refund up to 7 days before; 50% 3–6 days before"
+      },
+      "payment": {
+        "question": "Which payment methods do you accept?",
+        "hint": "e.g. credit cards, cash"
+      }
+    }
   }
 }

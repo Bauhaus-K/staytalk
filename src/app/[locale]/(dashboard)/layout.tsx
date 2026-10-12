@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
+import { LegalLinks } from "@/components/layout/legal-links";
 import { requireTenant } from "@/server/auth/session";
 import { logout } from "@/server/auth/actions";
 import { asLocale } from "@/i18n/locale";
@@ -28,6 +29,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps<
             </Button>
           </form>
           <LocaleSwitcher className="justify-start" />
+          <LegalLinks className="justify-start" />
         </div>
       </aside>
       <main className="flex-1 p-6">{children}</main>

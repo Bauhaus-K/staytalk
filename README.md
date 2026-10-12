@@ -77,6 +77,12 @@ pnpm demo:host    # 숙소 홈페이지 역할의 정적 페이지 → http://lo
 - **LINE**: 설정 화면에서 채널 시크릿·액세스 토큰을 등록하고 표시되는 웹훅 URL을 LINE Developers 콘솔에 입력합니다.
   자격 증명은 `APP_ENCRYPTION_KEY`로 암호화해 저장합니다. `LINE_MODE=mock`이면 실제 LINE API를 호출하지 않습니다.
 
+## 숙소 설정과 배포
+
+- 대시보드 **숙소 설정** 마법사: 숙소 정보 → 객실 타입 → 템플릿 질문으로 지식 입력 → 위젯 설치 코드
+- 운영 배포: [docs/DEPLOY.md](./docs/DEPLOY.md) (Vercel + Neon/Supabase, 크론, 환경 변수, 첫 계정 생성)
+- 대화 로그는 마지막 대화 후 90일이 지나면 마스킹됩니다(`pnpm job mask-old-conversations`).
+
 ## AI 평가 (evals)
 
 ```bash
@@ -86,6 +92,7 @@ pnpm eval --filter=fukuoka  # 케이스 id 부분 일치
 ```
 
 케이스는 `evals/cases/*.json`, 리포트는 `evals/reports/`에 생성됩니다.
+지식 검색 방식 비교는 `pnpm eval:retrieval` (trigram / vector / hybrid, 기본 로컬 해시 임베딩)으로 실행합니다.
 
 ## 주요 환경 변수
 

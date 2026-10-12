@@ -4,6 +4,7 @@ import type { DbClient } from "@/server/db/client";
 import type { TenantDb } from "@/server/db/tenant";
 import type { Notifier } from "@/server/notifications";
 import type { GuestLanguage } from "@/server/language/codes";
+import type { Embedder } from "@/server/embeddings";
 
 export type PropertyContext = {
   id: string;
@@ -31,6 +32,8 @@ export type ToolContext = {
   /** Unscoped client for raw SQL that applies organizationId explicitly. */
   client: DbClient;
   notifier: Notifier;
+  /** Optional embedder for semantic knowledge search. */
+  embedder?: Embedder | null;
   /** Request time (fixed per run; injectable in tests). */
   now: Date;
   state: RunState;

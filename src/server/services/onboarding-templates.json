@@ -1,0 +1,16 @@
+{
+  "checkin_time": "CHECKIN",
+  "self_checkin": "CHECKIN",
+  "luggage": "CHECKIN",
+  "wifi": "FACILITY",
+  "breakfast": "FACILITY",
+  "parking": "FACILITY",
+  "amenities": "FACILITY",
+  "smoking": "HOUSE_RULES",
+  "quiet": "HOUSE_RULES",
+  "pets": "HOUSE_RULES",
+  "airport": "TRANSPORT",
+  "nearby_food": "NEARBY",
+  "cancellation": "POLICY",
+  "payment": "FAQ"
+}

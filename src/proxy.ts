@@ -8,7 +8,13 @@ import { getWidgetProperty } from "@/server/services/widget";
 
 const intl = createIntlMiddleware(routing);
 
-const PUBLIC_PATHS = ["/login"];
+/** Reachable without signing in. */
+const PUBLIC_PATHS = ["/login", "/legal"];
+/** Signed-in users are sent to the dashboard instead. */
+const SIGNED_OUT_ONLY = ["/login"];
+
+const matches = (rest: string, paths: string[]) =>
+  paths.some((p) => rest === p || rest.startsWith(`${p}/`));
 
 function stripLocale(pathname: string): { locale: string; rest: string } {
   const [, maybeLocale, ...rest] = pathname.split("/");
@@ -39,14 +45,14 @@ async function widgetFrame(request: NextRequest) {
 // data-access layer (src/server/auth/session.ts).
 const dashboard = auth((req) => {
   const { locale, rest } = stripLocale(req.nextUrl.pathname);
-  const isPublic = PUBLIC_PATHS.some((p) => rest === p || rest.startsWith(`${p}/`));
+  const isPublic = matches(rest, PUBLIC_PATHS);
 
   if (!req.auth && !isPublic) {
     const url = new URL(`/${locale}/login`, req.nextUrl.origin);
     if (rest !== "/") url.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
-  if (req.auth && isPublic) {
+  if (req.auth && matches(rest, SIGNED_OUT_ONLY)) {
     return NextResponse.redirect(new URL(`/${locale}`, req.nextUrl.origin));
   }
   return intl(req);

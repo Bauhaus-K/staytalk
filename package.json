@@ -22,7 +22,9 @@
     "eval": "tsx evals/run.ts",
     "widget:build": "esbuild widget/loader.ts --bundle --minify --format=iife --target=es2018 --outfile=public/widget/v1.js",
     "demo:host": "node scripts/demo-host.mjs",
-    "job": "tsx scripts/job.ts"
+    "job": "tsx scripts/job.ts",
+    "eval:retrieval": "tsx evals/retrieval.ts",
+    "admin:create-owner": "tsx scripts/create-owner.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

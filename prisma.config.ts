@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -8,6 +8,8 @@ export default defineConfig({
     seed: "tsx prisma/seed/index.ts",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // CLI (migrations) may need a direct, non-pooled connection in production
+    // (Neon/Supabase poolers); the app itself uses DATABASE_URL.
+    url: process.env.MIGRATE_DATABASE_URL || process.env.DATABASE_URL || "",
   },
 });
