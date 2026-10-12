@@ -75,10 +75,13 @@ src/
     db/client.ts                Prisma client (unscoped — system use only)
     db/tenant.ts                forOrg(orgId): tenant-scoped client
     auth/                       session DAL (requireTenant), server actions, password hashing
-    agent/                      (Phase 1) loop, system prompt, tools/, llm/{anthropic,mock}
-    language/                   (Phase 1) detection + translation
+    agent/                      loop.ts (manual tool loop), system-prompt.ts, emergency.ts,
+                                tools/ (zod-defined, strict), llm/{anthropic,mock}.ts
+    language/                   codes, script-based detection, translation, fixed guest strings
     channels/                   (Phase 2/4) ChannelAdapter: widget, line, kakao(stub)
-    services/                   conversation, knowledge, booking, availability, escalation, usage
+    services/                   conversation (end-to-end guest message flow), knowledge (trigram+substring
+                                search), escalation, usage, conversation-view, runtime (prod wiring)
+    actions/                    server actions (knowledge CRUD, playground)
     notifications/              Notifier interface; email impl
     privacy/                    PII detection + masking
     jobs/                       expire-bookings, mask-conversations
@@ -86,7 +89,7 @@ src/
 prisma/                         schema.prisma, migrations/, seed/ (seed.ts reusable from tests)
 test/                           Vitest global setup (migrates staytalk_test), DB helpers, integration tests
 e2e/                            Playwright specs
-evals/                          (Phase 1) cases/*.json, runner, reports/
+evals/                          cases/*.json (schema.ts), run.ts, reports/ (gitignored)
 ```
 
 ## Core rules (do not violate)
@@ -127,6 +130,24 @@ evals/                          (Phase 1) cases/*.json, runner, reports/
 - Schema changes: edit `prisma/schema.prisma` → `pnpm db:migrate --name <change>`; raw SQL
   (extensions, special indexes) goes into the migration and must also be declared in the schema
   when Prisma can express it, so `prisma migrate diff` stays empty.
+
+## Agent implementation notes
+
+- Main model call: `client.beta.messages.create` with `fallbacks: "default"`
+  (beta `server-side-fallback-2026-07-01`), `output_config.effort` from `AI_EFFORT`, adaptive
+  thinking by default. Never send forced `tool_choice` or `thinking: disabled` (400 on current
+  models). Fast model (translation/language id): plain `messages.create`, effort `low`, no fallbacks.
+- Echo assistant content back unchanged within a run (thinking blocks included), except blocks
+  before a `fallback` boundary (`echoableContent`). History across turns is rebuilt from stored
+  text messages only.
+- System prompt = static rules → property + knowledge (`cache_control`) → per-conversation block
+  (guest language, local time). Anything volatile goes in the last block only.
+- Deterministic layers run before the model: PII masking, emergency keywords, escalated-silence,
+  monthly usage cap. Fixed guest strings live in `src/server/language/guest-strings.ts`.
+- The model ends answers with `<sources>id,…</sources>`; it is stripped and stored as
+  `AgentRun.citedKnowledgeIds`.
+- The mock LLM (`AI_MODE=mock`) is keyword-based and passes KB text through untranslated; it
+  validates wiring, not answer quality. Eval cases needing real understanding are `modes: ["live"]`.
 
 ## Testing conventions
 

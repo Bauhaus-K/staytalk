@@ -11,8 +11,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts", "prisma/**/*.test.ts", "test/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "prisma/**/*.test.ts", "test/**/*.test.ts", "evals/**/*.test.ts"],
     globalSetup: ["test/global-setup.ts"],
+    setupFiles: ["test/setup.ts"],
     // DB integration tests share one test database; run files serially.
     fileParallelism: false,
     testTimeout: 20_000,

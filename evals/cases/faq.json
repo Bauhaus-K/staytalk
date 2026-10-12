@@ -1,0 +1,202 @@
+[
+  {
+    "id": "seoul-ko-checkin-time",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["체크인 몇 시부터 가능해요?"],
+    "expect": {
+      "language": "ko",
+      "replyLanguage": "ko",
+      "escalate": false,
+      "replyIncludes": [["15:00", "15시", "오후 3시"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-en-incheon-airport",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["How do I get to the guesthouse from Incheon Airport?"],
+    "expect": {
+      "language": "en",
+      "replyLanguage": "en",
+      "escalate": false,
+      "replyIncludes": [
+        ["AREX", "Airport Railroad", "공항철도"],
+        ["Gyeongbokgung", "경복궁"]
+      ],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-ja-breakfast",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["朝食はありますか？何時からですか？"],
+    "expect": {
+      "language": "ja",
+      "replyLanguage": "ja",
+      "escalate": false,
+      "replyIncludes": [["8:00", "08:00", "8時"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-zhcn-wifi",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["有免费WiFi吗？"],
+    "expect": {
+      "language": "zh-CN",
+      "replyLanguage": "zh-CN",
+      "escalate": false,
+      "replyIncludes": [["Wi-Fi", "WiFi", "와이파이", "无线"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-ko-luggage-after-checkout",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["체크아웃하고 나서 짐 맡길 수 있나요?"],
+    "expect": {
+      "language": "ko",
+      "escalate": false,
+      "replyIncludes": [["18:00", "18시", "오후 6시"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-en-smoking-fine",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["Where can I smoke, and is there a fine for smoking inside?"],
+    "expect": {
+      "language": "en",
+      "replyLanguage": "en",
+      "escalate": false,
+      "replyIncludes": [["200,000", "200000"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-zhtw-nearest-station",
+    "property": "seoul",
+    "category": "faq",
+    "turns": ["請問最近的地鐵站是哪一站？"],
+    "expect": {
+      "language": "zh-TW",
+      "replyLanguage": "zh-TW",
+      "escalate": false,
+      "replyIncludes": [["景福宮", "Gyeongbokgung", "경복궁"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "seoul-ko-multiturn-breakfast-end",
+    "property": "seoul",
+    "category": "faq",
+    "description": "Second question only makes sense with the first turn as context.",
+    "modes": ["live"],
+    "turns": ["조식 있어요?", "그럼 몇 시까지예요?"],
+    "expect": {
+      "language": "ko",
+      "escalate": false,
+      "replyIncludes": [["10:00", "10시", "오전 10시"]]
+    }
+  },
+  {
+    "id": "fukuoka-ja-onsen-hours",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["大浴場は夜何時まで入れますか？"],
+    "expect": {
+      "language": "ja",
+      "replyLanguage": "ja",
+      "escalate": false,
+      "replyIncludes": [["24:00", "24時", "0時", "午前0時"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-ko-dinner-time",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["저녁 식사는 몇 시예요?"],
+    "expect": {
+      "language": "ko",
+      "replyLanguage": "ko",
+      "escalate": false,
+      "replyIncludes": [
+        ["18:00", "18시", "오후 6시"],
+        ["19:30", "19시 30분", "오후 7시 30분"]
+      ],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-en-tattoo-bath",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["I have a tattoo. Can I use the public bath?"],
+    "expect": {
+      "language": "en",
+      "replyLanguage": "en",
+      "escalate": false,
+      "replyIncludes": [["private", "貸切", "family bath", "reserved bath"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-zhcn-airport-access",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["从福冈机场怎么去你们那里？"],
+    "expect": {
+      "language": "zh-CN",
+      "replyLanguage": "zh-CN",
+      "escalate": false,
+      "replyIncludes": [["博多", "Hakata"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-ja-cancellation-fee",
+    "property": "fukuoka",
+    "category": "faq",
+    "description": "Policy question: quote the policy, do not escalate, do not promise refunds.",
+    "turns": ["前日にキャンセルした場合、キャンセル料はいくらですか？"],
+    "expect": {
+      "language": "ja",
+      "replyLanguage": "ja",
+      "escalate": false,
+      "replyIncludes": [["50%", "50％", "5割"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-en-allergy",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["My daughter has a peanut allergy. Can you adjust her meals?"],
+    "expect": {
+      "language": "en",
+      "replyLanguage": "en",
+      "replyIncludes": [["3 days", "three days", "3日"]],
+      "citesKnowledge": true
+    }
+  },
+  {
+    "id": "fukuoka-ko-parking-fee",
+    "property": "fukuoka",
+    "category": "faq",
+    "turns": ["주차장 있나요? 요금은 얼마예요?"],
+    "expect": {
+      "language": "ko",
+      "replyLanguage": "ko",
+      "escalate": false,
+      "replyIncludes": [["1,000", "1000", "천 엔"]],
+      "citesKnowledge": true
+    }
+  }
+]

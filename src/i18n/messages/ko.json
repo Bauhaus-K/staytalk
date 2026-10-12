@@ -35,5 +35,101 @@
     "comingSoon": "이 화면은 다음 단계에서 구현됩니다.",
     "knowledgeCount": "지식 {count}개",
     "roomTypeCount": "객실 타입 {count}개"
+  },
+  "enums": {
+    "category": {
+      "HOUSE_RULES": "하우스 룰",
+      "CHECKIN": "체크인",
+      "FACILITY": "시설",
+      "TRANSPORT": "교통",
+      "NEARBY": "주변 정보",
+      "FAQ": "FAQ",
+      "POLICY": "정책"
+    },
+    "language": {
+      "ko": "한국어",
+      "ja": "일본어",
+      "en": "영어",
+      "zh-CN": "중국어(간체)",
+      "zh-TW": "중국어(번체)"
+    },
+    "conversationStatus": {
+      "AI_HANDLING": "AI 응대 중",
+      "ESCALATED": "담당자 대기",
+      "RESOLVED": "해결됨"
+    },
+    "escalationReason": {
+      "UNKNOWN_ANSWER": "답변 불가",
+      "COMPLAINT": "불만",
+      "REFUND": "환불",
+      "EMERGENCY": "긴급",
+      "GUEST_REQUESTED_HUMAN": "담당자 요청",
+      "BOOKING_CHANGE": "예약 관련",
+      "USAGE_LIMIT": "사용량 한도"
+    },
+    "messageRole": {
+      "GUEST": "게스트",
+      "AI": "AI",
+      "STAFF": "스태프",
+      "SYSTEM": "자동 안내"
+    }
+  },
+  "property": {
+    "label": "숙소",
+    "none": "등록된 숙소가 없습니다."
+  },
+  "knowledge": {
+    "title": "지식베이스",
+    "description": "AI는 여기에 등록된 정보만 사실로 안내합니다. 없는 내용은 담당자에게 넘깁니다.",
+    "newItem": "새 항목",
+    "editItem": "항목 수정",
+    "allCategories": "전체",
+    "searchPlaceholder": "제목·내용 검색",
+    "search": "검색",
+    "category": "카테고리",
+    "language": "작성 언어",
+    "question": "제목(대표 질문)",
+    "questionHint": "예: 체크인 시간은 언제인가요?",
+    "content": "내용",
+    "contentHint": "게스트에게 안내할 사실을 구체적으로 적어 주세요. 시간·요금·위치는 정확하게.",
+    "active": "AI 응답에 사용",
+    "inactive": "사용 안 함",
+    "save": "저장",
+    "saving": "저장 중…",
+    "cancel": "취소",
+    "delete": "삭제",
+    "deleteConfirm": "이 항목을 삭제할까요? 되돌릴 수 없습니다.",
+    "edit": "수정",
+    "empty": "조건에 맞는 항목이 없습니다.",
+    "count": "{count}개 항목",
+    "errors": {
+      "required": "필수 항목입니다.",
+      "tooLong": "너무 깁니다.",
+      "generic": "저장하지 못했습니다. 다시 시도해 주세요."
+    }
+  },
+  "playground": {
+    "title": "채팅 테스트",
+    "description": "게스트 입장에서 AI 응답을 시험해 봅니다. 여기서 만든 대화는 지표에서 제외됩니다.",
+    "placeholder": "게스트처럼 질문을 입력하세요 (한국어·日本語·English·中文)",
+    "send": "보내기",
+    "sending": "응답 생성 중…",
+    "reset": "새 대화",
+    "empty": "아직 대화가 없습니다. 질문을 보내 보세요.",
+    "status": "상태",
+    "showTranslation": "사장용 번역 보기",
+    "trace": "AI 처리 내역",
+    "toolCalls": "도구 호출",
+    "noToolCalls": "도구 호출 없음",
+    "model": "모델",
+    "tokens": "토큰 (입력 {input} / 출력 {output} / 캐시 읽기 {cacheRead})",
+    "latency": "{ms}ms",
+    "cited": "근거 지식",
+    "noCited": "근거 지식 없음",
+    "outcome": "결과",
+    "error": "오류",
+    "escalation": "에스컬레이션",
+    "mockNotice": "AI_MODE=mock: 규칙 기반 모의 AI로 동작 중입니다. 실제 Claude 응답이 아닙니다.",
+    "sendError": "메시지를 보내지 못했습니다."
   }
 }

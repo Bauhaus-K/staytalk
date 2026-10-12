@@ -52,6 +52,16 @@ pnpm test        # Postgres 실행 필요 (staytalk_test DB 사용)
 pnpm test:e2e    # Playwright. 처음이면: pnpm exec playwright install chromium
 ```
 
+## AI 평가 (evals)
+
+```bash
+pnpm eval                   # mock 모드 (외부 API 불필요)
+pnpm eval --mode=live       # 실제 Claude API (ANTHROPIC_API_KEY 필요, 비용 발생)
+pnpm eval --filter=fukuoka  # 케이스 id 부분 일치
+```
+
+케이스는 `evals/cases/*.json`, 리포트는 `evals/reports/`에 생성됩니다.
+
 ## 주요 환경 변수
 
 `.env.example` 참고. 외부 서비스 없이 개발할 수 있도록 기본값은 `AI_MODE=mock`, `LINE_MODE=mock`입니다.

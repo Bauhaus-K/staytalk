@@ -12,6 +12,7 @@ const schema = z.object({
   ANTHROPIC_API_KEY: z.string().optional(),
   AI_MODEL_MAIN: z.string().default("claude-sonnet-5-5"),
   AI_MODEL_FAST: z.string().default("claude-haiku-5-5"),
+  AI_EFFORT: z.enum(["low", "medium", "high"]).default("medium"),
   AI_MAX_TOOL_CALLS: z.coerce.number().int().positive().default(6),
   AI_TIMEOUT_MS: z.coerce.number().int().positive().default(30_000),
   LINE_MODE: z.enum(["mock", "live"]).default("mock"),

@@ -35,5 +35,101 @@
     "comingSoon": "この画面は次のフェーズで実装されます。",
     "knowledgeCount": "ナレッジ {count}件",
     "roomTypeCount": "客室タイプ {count}件"
+  },
+  "enums": {
+    "category": {
+      "HOUSE_RULES": "ハウスルール",
+      "CHECKIN": "チェックイン",
+      "FACILITY": "設備",
+      "TRANSPORT": "交通",
+      "NEARBY": "周辺情報",
+      "FAQ": "FAQ",
+      "POLICY": "ポリシー"
+    },
+    "language": {
+      "ko": "韓国語",
+      "ja": "日本語",
+      "en": "英語",
+      "zh-CN": "中国語（簡体）",
+      "zh-TW": "中国語（繁体）"
+    },
+    "conversationStatus": {
+      "AI_HANDLING": "AI対応中",
+      "ESCALATED": "担当者対応待ち",
+      "RESOLVED": "解決済み"
+    },
+    "escalationReason": {
+      "UNKNOWN_ANSWER": "回答不可",
+      "COMPLAINT": "苦情",
+      "REFUND": "返金",
+      "EMERGENCY": "緊急",
+      "GUEST_REQUESTED_HUMAN": "担当者希望",
+      "BOOKING_CHANGE": "予約関連",
+      "USAGE_LIMIT": "利用上限"
+    },
+    "messageRole": {
+      "GUEST": "ゲスト",
+      "AI": "AI",
+      "STAFF": "スタッフ",
+      "SYSTEM": "自動案内"
+    }
+  },
+  "property": {
+    "label": "施設",
+    "none": "登録された施設がありません。"
+  },
+  "knowledge": {
+    "title": "ナレッジベース",
+    "description": "AIはここに登録された情報のみを事実として案内します。記載のない内容は担当者に引き継ぎます。",
+    "newItem": "新規項目",
+    "editItem": "項目を編集",
+    "allCategories": "すべて",
+    "searchPlaceholder": "タイトル・内容を検索",
+    "search": "検索",
+    "category": "カテゴリ",
+    "language": "記載言語",
+    "question": "タイトル（代表的な質問）",
+    "questionHint": "例：チェックインは何時からですか？",
+    "content": "内容",
+    "contentHint": "ゲストに案内する事実を具体的に記入してください。時間・料金・場所は正確に。",
+    "active": "AI回答に使用",
+    "inactive": "使用しない",
+    "save": "保存",
+    "saving": "保存中…",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "deleteConfirm": "この項目を削除しますか？元に戻せません。",
+    "edit": "編集",
+    "empty": "条件に合う項目がありません。",
+    "count": "{count}件",
+    "errors": {
+      "required": "必須項目です。",
+      "tooLong": "長すぎます。",
+      "generic": "保存できませんでした。もう一度お試しください。"
+    }
+  },
+  "playground": {
+    "title": "チャットテスト",
+    "description": "ゲストの立場でAIの回答を試せます。ここで作成した会話は指標から除外されます。",
+    "placeholder": "ゲストとして質問を入力してください（한국어・日本語・English・中文）",
+    "send": "送信",
+    "sending": "回答を生成中…",
+    "reset": "新しい会話",
+    "empty": "まだ会話がありません。質問を送ってみてください。",
+    "status": "ステータス",
+    "showTranslation": "スタッフ用翻訳を表示",
+    "trace": "AI処理の詳細",
+    "toolCalls": "ツール呼び出し",
+    "noToolCalls": "ツール呼び出しなし",
+    "model": "モデル",
+    "tokens": "トークン（入力 {input} / 出力 {output} / キャッシュ読込 {cacheRead}）",
+    "latency": "{ms}ms",
+    "cited": "根拠ナレッジ",
+    "noCited": "根拠ナレッジなし",
+    "outcome": "結果",
+    "error": "エラー",
+    "escalation": "エスカレーション",
+    "mockNotice": "AI_MODE=mock：ルールベースの模擬AIで動作中です。実際のClaudeの回答ではありません。",
+    "sendError": "メッセージを送信できませんでした。"
   }
 }

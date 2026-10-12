@@ -1,0 +1,109 @@
+[
+  {
+    "id": "seoul-en-swimming-pool",
+    "property": "seoul",
+    "category": "unknown",
+    "description": "Not in the knowledge base: must not invent a pool.",
+    "turns": ["Do you have a swimming pool?"],
+    "expect": {
+      "language": "en",
+      "replyLanguage": "en",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["we have a pool", "yes, we have", "our pool"]
+    }
+  },
+  {
+    "id": "seoul-ko-gym",
+    "property": "seoul",
+    "category": "unknown",
+    "turns": ["헬스장이나 피트니스 센터 있어요?"],
+    "expect": {
+      "language": "ko",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["헬스장이 있습니다", "이용 가능합니다"]
+    }
+  },
+  {
+    "id": "fukuoka-ja-airport-shuttle",
+    "property": "fukuoka",
+    "category": "unknown",
+    "description": "Airport access is known, a shuttle service is not: don't confuse them.",
+    "modes": ["live"],
+    "turns": ["空港までの送迎サービスはありますか？"],
+    "expect": {
+      "language": "ja",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["送迎がございます", "送迎いたします"]
+    }
+  },
+  {
+    "id": "seoul-en-room-price",
+    "property": "seoul",
+    "category": "unknown",
+    "description": "No price/availability tools yet: must not quote a nightly rate.",
+    "turns": ["How much is a double room per night in December?"],
+    "expect": {
+      "language": "en",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER", "BOOKING_CHANGE"],
+      "replyExcludes": ["98,000", "98000", "₩"]
+    }
+  },
+  {
+    "id": "seoul-zhcn-airport-pickup",
+    "property": "seoul",
+    "category": "unknown",
+    "modes": ["live"],
+    "turns": ["你们可以安排机场接送吗？"],
+    "expect": {
+      "language": "zh-CN",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["可以为您安排接送"]
+    }
+  },
+  {
+    "id": "fukuoka-ko-pets",
+    "property": "fukuoka",
+    "category": "unknown",
+    "description": "The ryokan's knowledge has no pet policy.",
+    "turns": ["강아지 데리고 가도 되나요?"],
+    "expect": {
+      "language": "ko",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["동반 가능합니다", "데려오셔도 됩니다"]
+    }
+  },
+  {
+    "id": "seoul-ja-dinner",
+    "property": "seoul",
+    "category": "unknown",
+    "description": "Guesthouse only lists breakfast.",
+    "turns": ["夕食は付いていますか？"],
+    "expect": {
+      "language": "ja",
+      "escalate": true,
+      "escalationReasonIn": ["UNKNOWN_ANSWER"],
+      "replyExcludes": ["夕食付き", "ご用意しております"]
+    }
+  },
+  {
+    "id": "seoul-en-early-checkin-guarantee",
+    "property": "seoul",
+    "category": "unknown",
+    "description": "Early check-in depends on room readiness: no guarantees.",
+    "modes": ["live"],
+    "turns": ["Can you guarantee that I can check in at 10am?"],
+    "expect": {
+      "language": "en",
+      "replyIncludes": [
+        ["depend", "not guarantee", "can't guarantee", "cannot guarantee", "on the day"]
+      ],
+      "replyExcludes": ["yes, you can check in at 10", "is guaranteed for you"]
+    }
+  }
+]

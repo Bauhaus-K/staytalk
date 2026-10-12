@@ -318,6 +318,8 @@ model Conversation {
   lastMessageAt        DateTime           @default(now())
   // Set by the 90-day retention job once messages are masked.
   maskedAt             DateTime?
+  // Dashboard playground / eval conversations: excluded from metrics.
+  isTest               Boolean            @default(false)
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
@@ -425,21 +427,25 @@ model Escalation {
 // ---------------------------------------------------------------------------
 
 model AgentRun {
-  id               String   @id @default(cuid())
-  organizationId   String
-  conversationId   String
-  triggerMessageId String?
+  id                String   @id @default(cuid())
+  organizationId    String
+  conversationId    String
+  triggerMessageId  String?
   // "mock" | "live"
-  mode             String
-  model            String
-  inputTokens      Int      @default(0)
-  outputTokens     Int      @default(0)
-  cacheReadTokens  Int      @default(0)
-  cacheWriteTokens Int      @default(0)
-  latencyMs        Int      @default(0)
-  stopReason       String?
-  error            String?
-  createdAt        DateTime @default(now())
+  mode              String
+  model             String
+  inputTokens       Int      @default(0)
+  outputTokens      Int      @default(0)
+  cacheReadTokens   Int      @default(0)
+  cacheWriteTokens  Int      @default(0)
+  latencyMs         Int      @default(0)
+  stopReason        String?
+  error             String?
+  // Knowledge items the model said it relied on (parsed from its answer).
+  citedKnowledgeIds String[] @default([])
+  // Final outcome: "replied" | "escalated" | "error"
+  outcome           String?
+  createdAt         DateTime @default(now())
 
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   conversation   Conversation @relation(fields: [conversationId, organizationId], references: [id, organizationId], onDelete: Cascade)

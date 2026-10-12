@@ -35,5 +35,101 @@
     "comingSoon": "This screen will be built in an upcoming phase.",
     "knowledgeCount": "{count} knowledge items",
     "roomTypeCount": "{count} room types"
+  },
+  "enums": {
+    "category": {
+      "HOUSE_RULES": "House rules",
+      "CHECKIN": "Check-in",
+      "FACILITY": "Facilities",
+      "TRANSPORT": "Transport",
+      "NEARBY": "Nearby",
+      "FAQ": "FAQ",
+      "POLICY": "Policies"
+    },
+    "language": {
+      "ko": "Korean",
+      "ja": "Japanese",
+      "en": "English",
+      "zh-CN": "Chinese (Simplified)",
+      "zh-TW": "Chinese (Traditional)"
+    },
+    "conversationStatus": {
+      "AI_HANDLING": "AI handling",
+      "ESCALATED": "Waiting for staff",
+      "RESOLVED": "Resolved"
+    },
+    "escalationReason": {
+      "UNKNOWN_ANSWER": "Unknown answer",
+      "COMPLAINT": "Complaint",
+      "REFUND": "Refund",
+      "EMERGENCY": "Emergency",
+      "GUEST_REQUESTED_HUMAN": "Asked for staff",
+      "BOOKING_CHANGE": "Booking",
+      "USAGE_LIMIT": "Usage limit"
+    },
+    "messageRole": {
+      "GUEST": "Guest",
+      "AI": "AI",
+      "STAFF": "Staff",
+      "SYSTEM": "Automated"
+    }
+  },
+  "property": {
+    "label": "Property",
+    "none": "No properties yet."
+  },
+  "knowledge": {
+    "title": "Knowledge base",
+    "description": "The AI only states facts registered here. Anything else is handed over to staff.",
+    "newItem": "New item",
+    "editItem": "Edit item",
+    "allCategories": "All",
+    "searchPlaceholder": "Search title or content",
+    "search": "Search",
+    "category": "Category",
+    "language": "Written in",
+    "question": "Title (typical question)",
+    "questionHint": "e.g. What time is check-in?",
+    "content": "Content",
+    "contentHint": "Write the facts to tell guests. Be exact about times, prices and locations.",
+    "active": "Use in AI answers",
+    "inactive": "Not used",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this item? This cannot be undone.",
+    "edit": "Edit",
+    "empty": "No matching items.",
+    "count": "{count} items",
+    "errors": {
+      "required": "Required.",
+      "tooLong": "Too long.",
+      "generic": "Could not save. Please try again."
+    }
+  },
+  "playground": {
+    "title": "Chat playground",
+    "description": "Try the AI as a guest would. Conversations here are excluded from metrics.",
+    "placeholder": "Ask like a guest (한국어 · 日本語 · English · 中文)",
+    "send": "Send",
+    "sending": "Generating reply…",
+    "reset": "New conversation",
+    "empty": "No messages yet. Send a question to start.",
+    "status": "Status",
+    "showTranslation": "Show staff translation",
+    "trace": "AI trace",
+    "toolCalls": "Tool calls",
+    "noToolCalls": "No tool calls",
+    "model": "Model",
+    "tokens": "Tokens (input {input} / output {output} / cache read {cacheRead})",
+    "latency": "{ms}ms",
+    "cited": "Cited knowledge",
+    "noCited": "No knowledge cited",
+    "outcome": "Outcome",
+    "error": "Error",
+    "escalation": "Escalation",
+    "mockNotice": "AI_MODE=mock: running a rule-based mock AI, not real Claude responses.",
+    "sendError": "Could not send the message."
   }
 }
