@@ -1,0 +1,30 @@
+services:
+  postgres:
+    # pgvector image so Phase 5 (embedding search) needs no infra change.
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: staytalk
+      POSTGRES_PASSWORD: staytalk
+      POSTGRES_DB: staytalk
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U staytalk -d staytalk"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailpit:
+    # Local SMTP sink. Web UI: http://localhost:8025
+    image: axllent/mailpit:v1.31.5
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  pgdata:

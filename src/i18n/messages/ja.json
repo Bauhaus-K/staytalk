@@ -1,0 +1,39 @@
+{
+  "common": {
+    "appName": "StayTalk",
+    "tagline": "小規模宿泊施設のための多言語AI接客・予約エージェント",
+    "language": "言語",
+    "signOut": "ログアウト"
+  },
+  "login": {
+    "title": "ログイン",
+    "description": "施設管理者アカウントでログインしてください。",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "submit": "ログイン",
+    "submitting": "ログイン中…",
+    "or": "または",
+    "magicLink": "メールでログインリンクを受け取る",
+    "magicLinkSent": "ログインリンクをメールで送信しました。受信トレイをご確認ください。",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません。",
+    "genericError": "ログイン中にエラーが発生しました。もう一度お試しください。"
+  },
+  "nav": {
+    "home": "ホーム",
+    "inbox": "受信箱",
+    "bookings": "予約リクエスト",
+    "knowledge": "ナレッジベース",
+    "rooms": "客室・在庫",
+    "metrics": "指標",
+    "playground": "チャットテスト",
+    "settings": "設定"
+  },
+  "dashboard": {
+    "welcome": "{name}さん、ようこそ",
+    "organization": "事業者: {name}",
+    "properties": "登録施設",
+    "comingSoon": "この画面は次のフェーズで実装されます。",
+    "knowledgeCount": "ナレッジ {count}件",
+    "roomTypeCount": "客室タイプ {count}件"
+  }
+}

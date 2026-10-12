@@ -1,0 +1,39 @@
+{
+  "common": {
+    "appName": "StayTalk",
+    "tagline": "Multilingual AI concierge & booking agent for small stays",
+    "language": "Language",
+    "signOut": "Sign out"
+  },
+  "login": {
+    "title": "Sign in",
+    "description": "Sign in with your property manager account.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "or": "or",
+    "magicLink": "Email me a sign-in link",
+    "magicLinkSent": "We sent a sign-in link to your email. Please check your inbox.",
+    "invalidCredentials": "Incorrect email or password.",
+    "genericError": "Something went wrong while signing in. Please try again."
+  },
+  "nav": {
+    "home": "Home",
+    "inbox": "Inbox",
+    "bookings": "Booking requests",
+    "knowledge": "Knowledge base",
+    "rooms": "Rooms & inventory",
+    "metrics": "Metrics",
+    "playground": "Chat playground",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {name}",
+    "organization": "Organization: {name}",
+    "properties": "Properties",
+    "comingSoon": "This screen will be built in an upcoming phase.",
+    "knowledgeCount": "{count} knowledge items",
+    "roomTypeCount": "{count} room types"
+  }
+}

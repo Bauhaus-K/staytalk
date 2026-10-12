@@ -1,0 +1,39 @@
+{
+  "common": {
+    "appName": "StayTalk",
+    "tagline": "소형 숙소를 위한 다국어 AI 응대·예약 에이전트",
+    "language": "언어",
+    "signOut": "로그아웃"
+  },
+  "login": {
+    "title": "로그인",
+    "description": "숙소 관리자 계정으로 로그인하세요.",
+    "email": "이메일",
+    "password": "비밀번호",
+    "submit": "로그인",
+    "submitting": "로그인 중…",
+    "or": "또는",
+    "magicLink": "이메일로 로그인 링크 받기",
+    "magicLinkSent": "로그인 링크를 이메일로 보냈습니다. 메일함을 확인하세요.",
+    "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "genericError": "로그인 중 오류가 발생했습니다. 다시 시도해 주세요."
+  },
+  "nav": {
+    "home": "홈",
+    "inbox": "인박스",
+    "bookings": "예약 요청",
+    "knowledge": "지식베이스",
+    "rooms": "객실·재고",
+    "metrics": "지표",
+    "playground": "채팅 테스트",
+    "settings": "설정"
+  },
+  "dashboard": {
+    "welcome": "{name}님, 환영합니다",
+    "organization": "사업자: {name}",
+    "properties": "등록된 숙소",
+    "comingSoon": "이 화면은 다음 단계에서 구현됩니다.",
+    "knowledgeCount": "지식 {count}개",
+    "roomTypeCount": "객실 타입 {count}개"
+  }
+}

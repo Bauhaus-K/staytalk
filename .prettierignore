@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+src/generated/
+prisma/migrations/
+.next/
+.next-e2e/
+public/widget/
+playwright-report/
+test-results/
+evals/reports/
